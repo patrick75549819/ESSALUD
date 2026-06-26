@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="EsSalud">
+<title>EsSalud Generador</title>
+
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAABfklEQVR42u3VsQ3AIAwAQYzYJZtlJ5gsTJNUaSkQBUh3A7iwXnak+iSYla0AASEgBISAQEAICAEhIBAQAkJACAgEhIAQEAICASEgBISAEBAICAEhIAQEAkJACAgBgYAQEAJCQCAgBISAEBACAgEhIASEgEBACAgBISAYKWvHvfdlp5uL1l0gvDAEBAJCQAgIASEgEBACQkAICASEgBAQAgIBISAEhIBAQAgIASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISAQEAICAEhIBAQAkJACAgEhIAQEAICASEgBISAQEAICAEhIAQEAkJACAgBgYAQEAJCQCAgBISAEBAICAEhIASEgEBACAgBISAQEAJCQAgIBISAEBACAgEhIATE+cracdG6nbpAICAEhIAQEAgIASEgBAQCQkAICAEhIBAQAkJACAgEhIAQEAICASEgBISAQEAICAEhIBAQAkJACAgBgYAQEAJCQCAgBISAEBAICAEhIAQEvw/7fgdpEeVuwgAAAABJRU5ErkJggg==">
+<meta name="theme-color" content="#0099D8">
+<style>
+:root{--az:#0099D8;--azo:#0077AA;--azc:#E6F6FC;--azm:#B3E3F5;--w:#fff;--bg:#EEF8FD;--tx:#003F5C;--su:#5B8FA8}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;position:fixed;width:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);display:flex;flex-direction:column}
+
+/* HEADER */
+.hdr{background:var(--az);color:#fff;padding:env(safe-area-inset-top,12px) 16px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,153,216,.35)}
+.hdr img{height:32px;border-radius:5px}
+.hdr h1{font-size:15px;font-weight:700;flex:1}
+
+/* NAV TABS */
+.nav{display:flex;background:#fff;border-bottom:2px solid var(--azm);flex-shrink:0;overflow-x:auto}
+.nav::-webkit-scrollbar{display:none}
+.ntab{flex:1;min-width:70px;padding:10px 2px;text-align:center;font-size:11px;color:var(--su);border-bottom:3px solid transparent;cursor:pointer;font-weight:500;white-space:nowrap;margin-bottom:-2px}
+.ntab.active{color:var(--az);border-bottom:3px solid var(--az);font-weight:700}
+
+/* SCROLL CONTENT */
+.pages{flex:1;overflow:hidden;position:relative;min-height:0}
+.page{display:none;position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 30px)}
+.page.on{display:block}
+
+/* CARDS */
+.card{background:#fff;border-radius:13px;padding:15px;margin-bottom:13px;box-shadow:0 2px 8px rgba(0,153,216,.1);border:1px solid var(--azm)}
+.ct{font-size:11px;font-weight:700;color:var(--az);text-transform:uppercase;letter-spacing:.07em;margin-bottom:13px;padding-bottom:8px;border-bottom:1px solid var(--azm)}
+.fld{margin-bottom:11px}
+label{display:block;font-size:12px;color:var(--su);margin-bottom:4px;font-weight:600}
+input,select,textarea{width:100%;padding:11px 13px;border:1.5px solid var(--azm);border-radius:9px;font-size:15px;color:var(--tx);background:var(--azc);outline:none;-webkit-appearance:none;appearance:none;transition:border-color .2s;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:var(--az);background:#fff}
+textarea{resize:vertical;min-height:55px}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+
+/* BUTTONS */
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;transition:opacity .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:active{opacity:.75}
+.bp{background:var(--az);color:#fff;box-shadow:0 4px 12px rgba(0,153,216,.3)}
+.bs{background:#fff;color:var(--az);border:1.5px solid var(--az)}
+.bpdf{background:var(--azo);color:#fff;box-shadow:0 4px 10px rgba(0,119,170,.28)}
+.badd{display:flex;align-items:center;justify-content:center;gap:6px;padding:11px;background:var(--azc);color:var(--az);border:1.5px dashed var(--az);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;width:100%;margin-top:4px}
+.biai{background:linear-gradient(135deg,#0099D8,#005f9e);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px}
+
+/* MEDICAMENTO ITEM */
+.mi{background:var(--azc);border:1px solid var(--azm);border-radius:9px;padding:12px;margin-bottom:9px;position:relative}
+.mi .mn{font-size:12px;font-weight:700;color:var(--az);margin-bottom:7px}
+.del{position:absolute;top:9px;right:10px;background:none;border:none;color:#e74c3c;font-size:18px;cursor:pointer;font-weight:700}
+
+/* ESPECIALIDAD SELECTOR */
+.esp-group{margin-bottom:9px;border:1px solid var(--azm);border-radius:10px;overflow:hidden}
+.esp-head{background:var(--azc);padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.esp-head .ico{font-size:18px;width:24px;text-align:center}
+.esp-head .enm{font-size:13px;font-weight:700;color:var(--tx);flex:1}
+.esp-head .arr{font-size:11px;color:var(--su);transition:.2s}
+.esp-head.open .arr{transform:rotate(180deg)}
+.esp-subs{display:none}.esp-head.open+.esp-subs{display:block}
+.esp-sub{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--azm);cursor:pointer;background:#fff}
+.esp-sub.selected{background:var(--azc)}
+.esp-sub input[type=radio]{width:18px;height:18px;flex-shrink:0;accent-color:var(--az)}
+.esp-sub .sub-info .st{font-size:12px;font-weight:700;color:var(--tx)}
+.esp-sub .sub-info .ss{font-size:11px;color:var(--su)}
+.sel-badge{background:var(--azc);border:1.5px solid var(--az);border-radius:9px;padding:9px 13px;margin-bottom:12px;font-size:13px;color:var(--azo);font-weight:600}
+
+/* PREVIEW DIRECTO (sin marco) */
+.preview-card{background:#fff;border-radius:13px;border:1px solid var(--azm);overflow:hidden;margin-bottom:13px;box-shadow:0 2px 12px rgba(0,153,216,.12)}
+.prev-hdr{background:var(--az);padding:12px 16px;display:flex;align-items:center;gap:10px}
+.prev-hdr img{height:28px;border-radius:4px}
+.prev-hdr .ph-title{font-size:13px;font-weight:700;color:#fff;flex:1}
+.prev-tabs{display:flex;border-bottom:1px solid var(--azm)}
+.prev-tab{flex:1;padding:8px 0;text-align:center;font-size:11px;color:var(--su)}
+.prev-tab.on{background:var(--az);color:#fff;font-weight:700}
+.prev-banner{background:var(--az);padding:8px 14px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.03em}
+.prev-body{padding:12px 16px}
+.prev-row{display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--azc);font-size:13px}
+.prev-row:last-child{border-bottom:none}
+.prev-row .pl{color:var(--su);white-space:nowrap;margin-right:10px}
+.prev-row .pv{font-weight:700;color:var(--tx);text-align:right;flex:1}
+.prev-row .pv.bl{color:var(--az)}
+.prev-modal-title{background:var(--azc);padding:11px 16px;text-align:center;font-size:13px;font-weight:700;color:var(--az);text-transform:uppercase;border-bottom:1px solid var(--azm)}
+.prev-card-mini{background:var(--azc);border:1px solid var(--azm);border-radius:9px;padding:10px 14px;margin:0 14px 10px;font-size:12px}
+.prev-card-mini .pcm-est{display:flex;justify-content:space-between;margin-bottom:3px}
+.prev-card-mini .pcm-lbl{color:var(--su)}.prev-card-mini .pcm-val{font-weight:700;color:var(--azo)}
+
+/* RECETA PREVIEW */
+.rec-header{background:var(--azc);padding:10px 14px;border-bottom:1px solid var(--azm)}
+.rec-num{font-size:14px;font-weight:700;color:var(--az);margin-bottom:3px}
+.rec-info{font-size:12px;color:var(--su)}
+.med-preview-item{padding:10px 16px;border-bottom:1px solid var(--azc)}
+.med-preview-item:last-child{border-bottom:none}
+.med-preview-item .mpn{font-size:12px;font-weight:700;color:var(--az);margin-bottom:3px}
+.med-preview-item .mpd{font-size:11px;color:var(--su);line-height:1.5}
+.meds-title{background:var(--azc);padding:7px 16px;font-size:11px;font-weight:700;color:var(--tx);text-transform:uppercase;border-bottom:1px solid var(--azm);border-top:1px solid var(--azm)}
+
+/* CITT */
+.citt-preview{background:#fff;border-radius:13px;border:1px solid #ccc;padding:20px;margin-bottom:13px;font-family:"Georgia",serif;font-size:12px;color:#111;line-height:1.6;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.citt-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #ddd}
+.citt-logo-row img{height:40px}
+.citt-form-row{display:flex;justify-content:space-between;font-size:11px;margin-bottom:8px;color:#555}
+.citt-titulo{text-align:center;font-weight:bold;font-size:13px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.03em}
+.citt-sep{border:none;border-top:1px solid #bbb;margin:8px 0}
+.citt-row{display:flex;gap:8px;margin-bottom:4px;font-size:11px}
+.citt-row .cl{min-width:120px;color:#555}
+.citt-row .cv{font-weight:normal;flex:1}
+.citt-num{font-size:26px;font-weight:bold;margin:6px 0 8px;letter-spacing:.5px;color:#111}
+.citt-section{font-weight:bold;font-size:11px;margin:6px 0 4px;text-transform:uppercase;color:#111}
+.citt-obs{font-weight:bold;font-size:12px;margin-top:8px}
+.citt-dias-total{font-weight:bold;font-size:12px;margin-top:4px}
+
+/* LOADING */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--azm);border-top-color:var(--az);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:6px}
+
+/* INSTALL MODAL */
+.install-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:flex;align-items:flex-end;justify-content:center;padding:16px}
+.install-modal.hide{display:none}
+.install-box{background:#fff;border-radius:20px;padding:24px 20px;width:100%;max-width:420px;box-shadow:0 -4px 30px rgba(0,0,0,.2)}
+.install-box .ib-logo{width:72px;height:72px;background:var(--az);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.install-box .ib-logo img{width:52px;height:auto;filter:brightness(0) invert(1)}
+.install-box h2{text-align:center;font-size:17px;font-weight:700;color:var(--tx);margin-bottom:6px}
+.install-box p{text-align:center;font-size:13px;color:var(--su);margin-bottom:18px}
+.install-step{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;padding:12px;background:var(--azc);border-radius:11px}
+.install-step .snum{background:var(--az);color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.install-step .stxt{font-size:13px;color:var(--tx);line-height:1.5}
+.install-step .stxt b{color:var(--azo)}
+.ib-btn-ok{width:100%;padding:14px;background:var(--az);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px}
+.ib-btn-cerrar{width:100%;padding:12px;background:transparent;color:var(--su);border:1.5px solid var(--azm);border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px}
+/* Botón instalar en header */
+.hdr-install{background:rgba(255,255,255,0.2);border:1.5px solid rgba(255,255,255,0.6);color:#fff;border-radius:20px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.hdr-install:active{opacity:.8}
+/* Banner instalar (aparece si no está instalada) */
+.install-banner{background:linear-gradient(135deg,var(--azo),var(--az));color:#fff;padding:10px 16px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.install-banner .ib-icon{font-size:22px}
+.install-banner .ib-text{flex:1}
+.install-banner .ib-text .ibt1{font-size:13px;font-weight:700}
+.install-banner .ib-text .ibt2{font-size:11px;opacity:.85}
+.install-banner .ib-arrow{font-size:18px;opacity:.8}
+
+
+/* RECETA MINSA */
+.rue-wrap{background:#fff;border:1px solid #ccc;border-radius:4px;padding:0;font-family:"Arial",sans-serif;font-size:10px;color:#000;margin-bottom:13px;overflow:hidden}
+.rue-header{background:#fff;border-bottom:2px solid #000;padding:8px 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rue-title{text-align:center;font-weight:bold;font-size:11px;text-transform:uppercase;grid-column:1/-1;border-bottom:1px solid #000;padding-bottom:6px;margin-bottom:4px}
+.rue-num{font-weight:bold;font-size:10px;text-align:center;margin-bottom:4px}
+.rue-section{padding:6px 12px;border-bottom:1px solid #bbb}
+.rue-section-title{font-weight:bold;font-size:10px;text-transform:uppercase;margin-bottom:4px;background:#eee;padding:3px 6px;margin:-6px -12px 6px}
+.rue-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:3px;font-size:9px}
+.rue-row3{display:grid;grid-template-columns:80px 1fr 80px;gap:4px;font-size:9px}
+.rue-lbl{font-weight:bold;color:#333}
+.rue-table{width:100%;border-collapse:collapse;font-size:9px}
+.rue-table th{background:#ddd;border:1px solid #999;padding:3px 5px;font-size:8.5px;text-align:center;font-weight:bold}
+.rue-table td{border:1px solid #bbb;padding:3px 5px;text-align:center;vertical-align:middle}
+.rue-table td.left{text-align:left}
+.rue-checkrow{display:flex;gap:10px;flex-wrap:wrap;font-size:9px;margin-bottom:3px}
+.rue-check{display:flex;align-items:center;gap:4px}
+.rue-check .box{width:11px;height:11px;border:1px solid #333;display:inline-flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.rue-footer{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 12px;border-top:2px solid #000}
+.rue-sello{border:1px solid #888;border-radius:4px;padding:8px;font-size:9px;text-align:center;min-height:60px;display:flex;flex-direction:column;justify-content:center;gap:3px}
+.rue-sello .sn{font-weight:bold;font-size:10px}
+/* DESCANSO MÉDICO */
+.desc-wrap{background:#fff;border:1px solid #ccc;border-radius:4px;padding:20px;font-family:"Arial",sans-serif;font-size:11px;color:#000;margin-bottom:13px;line-height:1.6}
+.desc-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #ccc}
+.desc-header .dh-logo{display:flex;align-items:center;gap:8px}
+.desc-header .dh-logo img{height:42px}
+.desc-header .dh-logo .dhl-txt{font-size:12px;font-weight:700;color:#333;line-height:1.3}
+.desc-header .dh-title{text-align:center;font-weight:bold;font-size:13px;text-transform:uppercase;line-height:1.5;color:#000}
+.desc-row{display:flex;margin-bottom:5px;font-size:11px}
+.desc-row .dl{font-weight:bold;min-width:200px;color:#000}
+.desc-row .dv{color:#000}
+.desc-sep{border:none;border-top:1px solid #ccc;margin:10px 0}
+.desc-obs{border:1px solid #888;padding:10px;font-size:10.5px;font-weight:bold;color:#000;line-height:1.6;margin-bottom:14px;min-height:80px}
+.desc-firma-box{border:1px solid #888;padding:12px;max-width:260px;margin-left:auto;font-size:10px;text-align:center}
+.desc-firma-box .dfb-firma{height:48px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#888;border-bottom:1px solid #888;margin-bottom:8px;font-style:italic}
+.desc-firma-box .dfb-nombre{font-weight:bold;font-size:11px;margin-bottom:2px}
+.desc-firma-box .dfb-esp{font-size:10px;color:#555}
+.desc-firma-box .dfb-cmp{font-size:10px}
+.desc-firma-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #888;margin-top:8px;padding-top:6px;gap:4px;font-size:10px}
+
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <img src="data:image/png;base64,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" alt="EsSalud">
+  <h1>Generador EsSalud</h1>
+  <button class="hdr-install" id="btn-install" onclick="mostrarInstall()" style="display:none">
+    &#11015; Instalar
+  </button>
+</div>
+
+<div class="nav">
+  <div class="ntab active" onclick="pg('cita')">&#128203; Cita</div>
+  <div class="ntab" onclick="pg('receta')">&#128138; Receta ES</div>
+  <div class="ntab" onclick="pg('rue')">&#128196; Receta RUE</div>
+  <div class="ntab" onclick="pg('citt')">&#128221; CITT</div>
+  <div class="ntab" onclick="pg('descanso')">&#128564; Descanso</div>
+</div>
+
+<div class="pages">
+
+<!-- ═══ CITA ═══ -->
+<div id="pg-cita" class="page on">
+  <!-- Banner instalación -->
+  <div class="install-banner" id="install-banner" style="display:none;margin:-14px -14px 14px -14px;border-radius:0" onclick="mostrarInstall()">
+    <span class="ib-icon">&#128241;</span>
+    <div class="ib-text">
+      <div class="ibt1">Instalar app en tu dispositivo</div>
+      <div class="ibt2">Accede desde tu pantalla de inicio</div>
+    </div>
+    <span class="ib-arrow">&#8250;</span>
+  </div>
+  <div class="card">
+    <div class="ct">Datos de la cita</div>
+    <div class="fld"><label>Estado</label>
+      <select id="c-est"><option>PENDIENTE</option><option>CONFIRMADA</option><option>CANCELADA</option><option>ATENDIDA</option></select>
+    </div>
+    <div class="r2">
+      <div class="fld"><label>Fecha</label><input type="date" id="c-fec" value="2026-06-24"></div>
+      <div class="fld"><label>Hora</label><input type="time" id="c-hor" value="09:48"></div>
+    </div>
+    <div class="fld"><label>Paciente</label><input type="text" id="c-pac" value="FRANCO MORENO MAYRA"></div>
+    <div class="fld">
+      <label>Médico</label>
+      <div style="display:flex;gap:8px;margin-bottom:6px">
+        <input type="text" id="c-med" value="CUEVA RIOS MARGARITA" style="flex:1" placeholder="Nombre del médico">
+        <button onclick="sugerirMedico()" id="btn-med-ia" style="padding:10px 14px;background:linear-gradient(135deg,var(--az),var(--azo));color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:5px">
+          &#10024; Sugerir
+        </button>
+      </div>
+      <div id="med-esp-hint" style="font-size:11px;color:var(--su);margin-bottom:4px">
+        Especialidad: <span id="med-esp-label" style="font-weight:700;color:var(--az)">MEDICINA GENERAL</span>
+      </div>
+      <div id="med-loading" style="display:none;font-size:12px;color:var(--su);padding:8px 0;display:none;align-items:center;gap:6px">
+        <span class="spinner"></span>Buscando médicos para <span id="med-loading-esp" style="font-weight:700"></span>...
+      </div>
+      <div id="med-error" style="display:none;background:#fff0f0;border:1px solid #ffaaaa;border-radius:8px;padding:8px 12px;font-size:12px;color:#c00;margin-top:4px"></div>
+      <div id="med-sugeridos" style="display:none;margin-top:4px;background:#fff;border:1.5px solid var(--azm);border-radius:10px;overflow:hidden;box-shadow:0 4px 12px rgba(0,153,216,.15)"></div>
+    </div>
+    <div class="fld"><label>Centro Asistencial</label><select id="c-cen"></select></div>
+    <div class="r2">
+      <div class="fld"><label>Consultorio N°</label><input type="text" id="c-con" value="04"></div>
+      <div class="fld"><label>Modalidad</label>
+        <select id="c-mod"><option>PRESENCIAL</option><option>VIRTUAL</option></select>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">Especialidad</div>
+    <div id="esp-sel-badge" class="sel-badge" style="display:none">&#10003; <span id="esp-sel-txt">MEDICINA GENERAL - CONSULTA MEDICA</span></div>
+    <div id="esp-list"></div>
+  </div>
+  <button class="btn bp" onclick="goPvc()">&#128064; Ver vista previa</button>
+  <button class="btn bs" onclick="rstCita()">Resetear</button>
+</div>
+
+<!-- ═══ RECETA ═══ -->
+<div id="pg-receta" class="page">
+  <div class="card">
+    <div class="ct">Datos de la receta</div>
+    <div class="fld"><label>N° de Receta</label><input type="text" id="r-num" value="4446725"></div>
+    <div class="fld"><label>Médico</label><input type="text" id="r-med" value="CABALLERO RUPAY MERCEDES MGDALENA"></div>
+    <div class="fld"><label>C. Asistencial (IPRESS)</label><select id="r-cen"></select></div>
+    <div class="r2">
+      <div class="fld"><label>Día</label><input type="number" id="r-dia" value="10" min="1" max="31"></div>
+      <div class="fld"><label>Mes</label>
+        <select id="r-mes">
+          <option>ENERO</option><option>FEBRERO</option><option>MARZO</option><option>ABRIL</option>
+          <option>MAYO</option><option selected>JUNIO</option><option>JULIO</option><option>AGOSTO</option>
+          <option>SEPTIEMBRE</option><option>OCTUBRE</option><option>NOVIEMBRE</option><option>DICIEMBRE</option>
+        </select>
+      </div>
+    </div>
+    <div class="fld"><label>Año</label><input type="number" id="r-anio" value="2026"></div>
+  </div>
+  <div class="card">
+    <div class="ct">Sugerir con IA</div>
+    <div class="fld"><label>Especialidad para sugerir</label>
+      <select id="ia-esp">
+        <option>MEDICINA GENERAL</option><option>CARDIOLOGIA</option><option>CIRUGIA GENERAL</option>
+        <option>DERMATOLOGIA</option><option>GASTROENTEROLOGIA</option><option>MEDICINA INTERNA</option>
+        <option>OBSTETRA</option><option>ODONTOLOGIA</option><option>OFTALMOLOGIA</option>
+        <option>ORTOPEDIA Y TRAUMATOLOGIA</option><option>OTORRINOLARINGOLOGIA</option>
+        <option>PEDIATRIA</option><option>NEUROLOGIA</option><option>ENDOCRINOLOGIA</option>
+        <option>REUMATOLOGIA</option><option>NEUMOLOGIA</option><option>UROLOGIA</option><option>GINECOLOGIA</option>
+      </select>
+    </div>
+    <button class="biai" onclick="sugerirIA()">&#10024; Sugerir medicamentos con IA</button>
+    <div id="ia-loading" style="display:none;text-align:center;padding:10px;color:var(--su);font-size:13px">
+      <span class="spinner"></span>Generando medicamentos...
+    </div>
+    <div id="ia-error" style="display:none;background:#fff0f0;border:1px solid #ffaaaa;border-radius:8px;padding:10px;font-size:12px;color:#c00;margin-bottom:8px"></div>
+  </div>
+  <div class="card">
+    <div class="ct">Medicamentos</div>
+    <div id="meds-list"></div>
+    <div class="badd" onclick="addMed()">&#65291; Agregar medicamento</div>
+  </div>
+  <button class="btn bp" onclick="goPvr()">&#128064; Ver vista previa</button>
+  <button class="btn bs" onclick="rstReceta()">Resetear</button>
+</div>
+
+<!-- ═══ CITT ═══ -->
+<div id="pg-citt" class="page">
+  <div class="card">
+    <div class="ct">Certificado de Incapacidad (CITT)</div>
+    <div class="r2">
+      <div class="fld"><label>Formulario</label><input type="text" id="t-form" value="8003 - 1"></div>
+      <div class="fld"><label>CITT N°</label><input type="text" id="t-citt" value="A-407-00025421-23"></div>
+    </div>
+    <div class="fld"><label>EE.SS.</label><input type="text" id="t-eess" value="408 POLIC. NIVEL I MARINO MOLINA SCIPPA"></div>
+    <div class="r2">
+      <div class="fld"><label>Acto Médico</label><input type="text" id="t-acto" value="10034250"></div>
+      <div class="fld"><label>Servicio</label><input type="text" id="t-serv" value="AB1 MEDICINA GENERAL"></div>
+    </div>
+    <div class="fld"><label>Nombre Asegurado</label><input type="text" id="t-nom" value="NOELIA CRISTINA HUAPAYA ESPINOZA DE ALBARRAN"></div>
+    <div class="r2">
+      <div class="fld"><label>DNI</label><input type="text" id="t-dni" value="73077022"></div>
+      <div class="fld"><label>Autogenerado</label><input type="text" id="t-auto" value="8705248SDCM003"></div>
+    </div>
+    <div class="r2">
+      <div class="fld"><label>Tipo Atención</label>
+        <select id="t-tipo"><option>EMERGENCIA</option><option>CONSULTA EXTERNA</option><option>HOSPITALIZACION</option></select>
+      </div>
+      <div class="fld"><label>Contingencia</label>
+        <select id="t-cont"><option>ENFERMEDAD COMUN</option><option>ACCIDENTE DE TRABAJO</option><option>ENFERMEDAD PROFESIONAL</option><option>MATERNIDAD</option></select>
+      </div>
+    </div>
+    <div class="r2">
+      <div class="fld"><label>Fecha Inicio</label><input type="date" id="t-fini" value="2024-09-24"></div>
+      <div class="fld"><label>Fecha Fin</label><input type="date" id="t-ffin" value="2024-09-24"></div>
+    </div>
+    <div class="r2">
+      <div class="fld"><label>Días Consecutivos</label><input type="number" id="t-dcon" value="1" min="0"></div>
+      <div class="fld"><label>Días No Consec.</label><input type="number" id="t-dnco" value="0" min="0"></div>
+    </div>
+    <div class="r2">
+      <div class="fld"><label>Código Médico</label><input type="text" id="t-mcode" value="63832"></div>
+      <div class="fld"><label>Cargo</label><input type="text" id="t-mcargo" value="MEDICO"></div>
+    </div>
+    <div class="fld"><label>Nombre del Médico</label><input type="text" id="t-mnom" value="CESAR ANTONIO REBAZA VARGAS"></div>
+    <div class="fld"><label>RUC</label><input type="text" id="t-ruc" value="20600593685"></div>
+    <div class="fld"><label>Usuario Sistema</label><input type="text" id="t-usr" value="CRISTOPHER JOHEL PALOMINO NAJARRO"></div>
+    <div class="r2">
+      <div class="fld"><label>Fecha Sistema</label><input type="date" id="t-ufec" value="2024-09-24"></div>
+      <div class="fld"><label>Hora Sistema</label><input type="time" id="t-uhor" value="08:47"></div>
+    </div>
+  </div>
+  <button class="btn bp" onclick="goPvCitt()">&#128064; Ver vista previa</button>
+  <button class="btn bs" onclick="rstCitt()">Resetear</button>
+</div>
+
+<!-- ═══ PREVIEW CITA ═══ -->
+<div id="pg-pvc" class="page">
+  <div id="cita-preview-wrap">
+    <div class="preview-card" id="cita-doc">
+      <div class="prev-hdr">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDCAIAAADlKTeNAAAV5UlEQVR42u1ce3hU1bVfaz/OmWdmJjMhCSEQkpAAAgIKWgGtiohaq9RaX0VbVK621Vu1+vW29Xlb/dr6tbVqtbVaFW/ro1LRWguIAgVUHgoIyCsEyIO8k0lmJjPnnL3X/eMkGCGBaAlevOxv/kgm+3HOb++99m/91tpBIoLjpX+FHYfgOFjHwToO1nGwjoP1/76IozyeIgICAEBEhv1qQgBaEyISUf9bDUTBo8mzCAD7/rXfnRACfsFXliZiCK9VtDy3oTniEd8/JW9k1KeJGOIhwAUCh9Sja+ve2t1ZHOK3filvaJaXCBC/uCtLETCEFdVtpz+9E1CArUvz5Jpvl4cMCdjni2sChvC9RbsfXdEIHgMsVZYvV84uj3oN+DxW11Ey8ESEAEv3JEBzj0+ILGNni7WzJY2Iuo/ZIgKGUJ/MPLspzgMeYaIRMrbXW/+sbEMEpT8HL+0ogcUQ2i3nvZoUcmYrIk2M2PLqhKU0HPKtJUOOpBRpYo4CIPIKAPh8jBY7WtYKF2xr/NeeJDO5BgICzfgDK+oqWlKMYa+rBBEcTRGPcfeUXA9zOAA4esbIwDlFESJgn8eheDTAQgBH0+yx+Y99pUBozQCVQ6cPNdZfP7o8GnDX3cHFIRIMEeG0Ql/YJ5UiL9c/npKXZUqHNMAXcRsqIkQUDP+wvv6WhfssAA3ABb5fm15YEWesF+tDAI4mgdjpOD9ZVjX1mcq6FAKHJLGLX6x8fkuDZIwIjr62NLCnoaNJMGzN2Lcs3vPM+naQEjm5Bz9pBNt6/IKC/xif51brBldzZACwbG/bbW9Wr6u1wDTcYwARSAE49p3Tcu47vRAANRHi0WMRAwUWdR9nq6rbb3xj78ZaBQagxP2jISI5AMp66sKCb4/LUwQcu6xbwnbuW17z67WtThpAABiMIegu3g+kECzrG2Oyfn3OsHy/RERNgEeFSbABQgoBGMJv1tROnVexscqKRdg5xQbrOTGaxucJxsWcBbXPbWnkCJajGeL8bU3jn9j8y6VNjq2nlHquGZ9lImmL9i+gohCAIV5c3f6DNyuVVs2pDENA6Hajjq2V5fZXn8rMfm33mxvjuXnm7DHhm0/O/ev21lvfqOM+oTQJhk7K/q8zYqcV+L/1yt7muLP8uhHThobvXFq5oip14Yiw18NMpJRDlg35YfnzVY0b6hzTyzNJ6y+XFGYceGFT8xUnZv/2ncY9HWpmie+xmUU+yQEQiDQBYwOyN488WC7tru7onPXijktOiM4ZGxvkNwHUCU98tKWJmCS3grZhdIxvvv6EbS2dD6yojvhkTZt98cjgBWWR6c9tb07DmFzva5vjoGD0UM/Pzsi9an5VSnF01IMzC26dNCitnElPb9tUY4OPQzxz/3l5t59aQAByICnFkfcN3acdEvSuuXasSx4dTcuq27c02syQLl/XBChwR6u1viExflDg6a+OmLep/uHVzS9ta79sTOKS0ZFOW923soX5TMlhS7W1oir1wteGPLKudeGm9oZkRhG1pVVlm4VebjCwTdac1oIhgK5OZN6rTp5aECgImnSkuetAOdKuOdaaNIBk+MLmVlDEkPbzBMbQTtK/qtrH5QRspWePyZ02NOv2JVUvrG19OWCeW+rN8oqOjLIU+oL82Y3Nz6yjJy4euqUhXRm3GWLUa8wZm/3YujaHIQquSP1oWdWbu5NrapNgOa9fVVIQNF1J5xjgWejaeIaSYWvaerUiCYZQB2x5xhZXJhmC5KiIirK8L80qe/mbw4dm4etbku0WcMbIUrefEtl47chvjgsLxIKwWdlmIZBk+KMpueWDuLI1SPab1fEHFjWsqUnOGRfeetPY80tjBHDEDdfASjSuLf9HRVt9m8W9ptK6h2nTINm7+zqb01bUYxCAJlBEXyuPnTU869Snt21vIZIIkv3pg/i4mGf0IHn5y3uSbXT+OB8APbG+4f6V9bsThAK1Ar+Hz54Yvumk2OhYYP9sHWOk1OVN5/91+xtbO7mHHbCyGKJO269fUXR+SbbSRACCYUPK+s4buxfsTGnOtMKoH1uSDiXsu8/NDxisvt06qdD/yHstK3e0gyGYT5AmIAhJ2DS3rMDvsZXmbKAcRzaQSAFD3NGaWro7iQY7WIphCIxg6d6EW1kwXFvXcea8bS9vTinOEQAcNSoi35ld/PWJ2ff+s2ZldapV0RXPV66q7bz05Oy7vhxjShMA49iW0rNfrVSa2EDqzgMKFgHA37bH02ngHAiAIwjGODKGDAGJQAOfvz1uKUdy/J/NjWfOq9jSooRfEpEmAMF3tGb2xjsn5ZuLryvf0ZxZUZm6++z8t64ofPGikuKw4biHIKH0ird3dD6+vp4zdAZM6hoosAiAM7SUenJDMynQRAxAWeQkbZW2dMYiINJQmCNLQiLl6D9vqvvmi7sSxIXBCRRDIADk1JikHXFnQ11ielH4rStL5k4ML9ud+NV7jQCwqLIDEBmhspTtKOk1fvxWXUVrivctKP5fBYsAATY3Jk2EU0q8DEFbekaJ/5lZQ+ZfOvT1y4YO8TPqdC4p9S68fJRfsPNKY89cOlyA4yhQKa1td0MxbVN90rlnap4iqk/aty2uW7ors7Iu05DK7GhVwIWlnJ+fHR0XlXZGtVvsu4uqsAdBOTbAcg1HWdS/8foTfjAppjqV18CHpuddPTZnVnns/NLYt8eGSOvXdyWTtmJMRDziw6aMk4KhQbx9anZJNteWQiJE2NKYHhELM4BRMd/4fA8zeHuG3t7TWpOwUesJufKOU4b847KSSQWCNC3cmXp8/T7BUOljTc/yCQaAf9ncRmmaVe4fGfVbimxNimjuiTnhiNjRYK+ojnOE1fvaH1rVZHjoT+cX/OLMoRuvHfnjqWFlOST50r3Jfck0IgjGJxf4dcYpCBqtGapLagJ12+QcTVAQMBddWXbuCBMcuHNp4972Ts7giG/GAQSLCBCxpqNzyd4k9+P3Jw0CQM5AMgTCIVmeK08IY0r/bXsHAPxoWa2dch46b/BZwyKdDvmE+Fp5jLQeFuJzx4dq29MECABfHuoHxxkZNZvTRElnTL5xSVk2AimisCkXXDrimpOymhqd2a/uzigFgEcWrQEkpYoIAZfsScQbrfMnhCbmBS2lGaJDpAlIww3jo79b1byxIf381sYl69tuPCv3hhPz0o4WiEpTwEBm8IiBj84osZW2FTGEk3P9IKAkJCpaLbKc70zMl5xbijhDSxNH/tQFxQG5O5FRltIc0dURjwGwGAJDeGlrm+kVD55ZwBFd8rS/jM0JXDUxMHN4aMmu+GWTsn83YzgAeAQDgIRl7WrpKMk2gyYHAMm73nlEtm9soWdkVP5xQ7y0yHfjhHwA4KJnt/jIucOPNaWUCBEeXF17+5v1Xi+/aWI2EesZZSACgbC1NZO0nNKIYUohGXMfRiBUxjOV7U5Fm80R54wJOUQISIQC4W8V8Xy/WLqrc0y++dWSgKUOjE67EpBSVBQWN52UdwQ9nwEFC7/y4vaKFltKbOlUB8ZjEIBQ8i69WBNoIsSuWoIziSg5ElBHRu1vghr9Jre19klmKUpYan+TAxa1beuTBvv+/o2yIyjUDHj4XoPGz5qZQEDQR1sCwsP7y6iP6BGGx2K2sqYu2skRjpRitb9Phn1qO4cHSxMcus6hc6aoN0pxAANCV3vqx1vjgYlKXQk11Eflfq5gDcD6Uf1oryylifcB7aHTj3rWeW1Hyyvb40B4xZjQ9KJIfxoets8FO5oWbO9AgCvGRKYPC/fapzgcq6QN9cldbRnB8WBU3WyWmI9PHRLqz0RqIs6wLWMvqWz7oD4dzyjJWUGAj8/1Tx4cCBqiHz0AQ3inJvnUqmYAKI/K6UUR98t/M8Kysjr1p1VNADgyxzN9WLjXPsWhWaVA/O3apqfeaQSfBN3bQs/ok0p8a68JHzbBzJ2rJzfW37esbm+7BtUd62MEkpeG8LZTc26YmOeqYId+PY/BhF8AgkceMfPtk1z4JSB4BfsspNR9ZK/BuVdyjyByOEHPFCGOYKMOG9RzljQRdlsX6rZoWhNn+MT6+rmvVIPXAIbS1Lk+yYHiFrWlaede+/VBiRsmuuoKdcefEQGIiD5pdzWBowF6qAs9TD4eRLu6/9RjEtw8Vdf8uckWjiZHkxut/ewMXpNWACpt3zUtdtXoSEYRZ59YwwHJAQgRFRFH/PiRsGdoAjts+79X1TGvQUQXl/nunJI7POxlCK1p56PmzifXNZxRFNx/GH1iC3R32HcuFzHsU0o+WDt17eZ+0+n+4BXssEmu/XZ3iAqzzLJo4BAGjiNubUr8vaJ9a5udyiifwYYFxZQC3+TB4YDBtjalqjs0ASsM0nMXFflE19BZphgW8swsjlhKA4ClaUtTcnVNYmurVZ9ybFsFPHJkRF5QGhqbE9CqdzhW17TvbM0gwBnDgoODnq4sEgAEWL6ntbrDZgzPGR6OeqWLlK3VworWFTXp+pRDAGNi5qamFHJGvQ7wGXzDtK0tRT0zXtxZ54gAxBB+tqr2p8vr0w6CA6AAUANjwOjSccEXLx7RkVGkERgYAj2CaU0OgEBEAA2EAJwxAPjtmn0/XFxHwMDWXa+LAJLdtazhR1Ny7p5W0CtYD3/Q8ty7TcBh/pXFs8o9mogjupDdvbJh6UcJMPS7142MeiVnuKq2/aY39r5fZ4Fm4BBoDYjg48JkTuqIgEUQNJnB0eDYKxt4fVfLTxbXos8H6JTlivJsn6VVVTy9paqTkAFAXsAQQhPKihbrruVVPz290ADWLU4AQ7Q1ccSQwclycnN9RVliUMA0GFa0ptY3OA4X9y6pLw6bV4/NOTily28I7pPAegnf+w3BfQaT2v3D6tqOc/+8M2EJkAJJTSj05PnlvqT9YZN1hFQHAhTsrb0JgZhRwFiXEmYryAvwmcUhAP7y1lYUBir7exPDP/1yQZYhAaDTsRdVtvk500TlUf8Zhb4l29OeoPGzf7Us25O6YUJsRnFWjs90bZ87C9OLQy9cOXxaYVZ+wHRNiK31vStq7l/ZxAzx+/WNV4/NOfi41EQugtTbKaw0kXbdI7hlSXUig1zC8CA+dl7RmUNDnDFN+uY39z66uu3QJ3p/wEIg4oZ8dkP7s2vbALrFAwSw9KgizwWlEQBo6wRgqJWaXhx0kSIAk4uLRuRAd4raI+cUzmjcWdVqMb9nRY2zYm9NblbtecODc06MTSvMcqEpCXtLwt6ew0vGfvilvMc/aG1O0q64AtCS46dNk9REfoNva06uqkmjIU2wXr60bFwsoIksRQZng3yiK3Dw7yulpCnLzwfHZF5U5EVlXlQOjsqcqCwJSTcxanhEkK0Mj7xxYc1vVtduaUpajuMuAUcTR0YEI6P+ZVeXXT4uaOo0OA4IVt/Jnl4fP/2Znd9ZWGlrrYn2B7IcreIZ1ZJ2WjNOW4YCJgeAjALns6kIBAZna+uS4Giy9dnFWeNiAVt1xRkJwO6HZi/6NQ5DlXHunJZ73Yk5GfWxgdcEBgOXrswdH3tqQ3NbQtfa7JZFDR5f47Agm5zru2Zc9tndJFsTDQ95/3Jx6bbm1EtbW+Zvj3+wzwbBpeSPrWr2CPzV2UUMYeGulqc3Nm9utmqSlHIUAAKBTQT834pxIVBdkoA4aD0u9olrGti/Ceg/A6YsQ4Q9MtdvRL3S/eT4ZMgjGTIiKs/2L76idEaJGTQ0cJ1O6m0Net6Hienzdj20toZ1p0ASgSYoj/p+MmXImm+NevXSoSdEmW07POh5ZF1zc6f1+Pq6mfMqn9+U+rAmI8A5IdsYGzNGx0zJjkCCcneyBXol/wze5KegDg4RERxAHdxrIQxRkT45L2vhlcE98c7369Mrq9rnb++o7CCGnjverr9oRPawLK/bFruJPke8cET2yfm+k5/euS+llRavVbQ98E4Dmqbkzv1n5M4dPyhoCAB0SJf//qNdadU9MnYLENSXttFr8RvCbdaasair3afA7FP4VkSgiA78aHLTPTgyRWArGBbyzSrLfvDsotXfKj85V5ByLBvfb3BjWV0mzHWJFEFGUX7AUxKVZGshcUtzujWNpJ0T88zbJhcEDakINUHaIfWxT4DsY3DQ0aQ0mQiIBABxy9HkDgGKwOmxbxXByGxOSMDZquqEqx0qcmv2Ky7L+m8gAyYTDD2CCYY9Py4p7bBsjiR7sLCY18j1CdKAAAbDls7MksoWAOpqxVAwNDku3t36fm0nk8IvaHjIk1bkGqkergyYHHkPLcsrEUEDYGPKcrsqi3BXyH6tIs4QTMEYgmQgGBoIAIQMU5Y+pSAYDnAm8N0q68kN9e7DGxw5ok/iYden6IddREbEDP7nLS3bmjst/bF2gQiOQ8Vh+d2TBv/X21VbGtJfKQ8PD0mvIdvT9msV7Ysqk8KQynEm5XrX7EvNfG7XlJLA1AJfccQbELrdwpU1HS9v63BA6JT91VHBS0YE/3NRFTPM9XWZ+9+pumFCbsQjCKi6PWMpzRkIhkRQFvEQEDfFvM0d5dkNAclnloYCy+uTis3fmrhOVlw+Mhr1ig7bWVefXtuQFpIBqrTSASlvnZR916J6mWXcuLB29b7kJWWRqFfE03p5VYoLBlofQu05lPjnmpjr39j9x3dawC8h44BDB0s0o0b4tlw7atQTm7ZWZMDLgRFwBoqAECRCxr7t9NiDZxU9vG7fza9UgxSgETgBEhACMRAAtpo63DP/66U5PuOOt/f8clkjGAZoJzckC0LScnRV3I5nEBziBtTfPNpkOPrJzVVNBAaHtANSN982bsG2ljkLqoCZoB3giIKRJrA1CA5EYNvvzS2fnB90NH13UeUf1rQCl6A0CELByAYABMGgLfWLiwtun1xwoGl2Xe577rnnEEaKIb5fn6hNOvkhmZMlcyPGoLAxKNL1yQub2SExabBnVlkk24PKAMXBZgwRDBNjfj4hR957Zt4dpw5WmkbFvOW5hgZlcbSRiHMpMRJg43Lk90/JfnjmsJAptaYZxaHCMGtIWkmCpoSzrznd0KFsxvICYkIun3Ni5PTCoN8QpxX4NjQk2m3H9LJ8P7+gJGtmcfZpQ83mznTcoU6lSTmA6POyHD+blGd875TYzOKw5IwhXlgaHpdnxDNWQkGnBnIUMPCbrCiI00f4rx4TzQ8YrkD0GTR40n2fGQTAemRvpmzV1Gl3OoQIEZPn+IyDj5wOS9WnrJSlOYOoV+b5jQPldAQAqk5kGhKW5TiCsZDHyPHLsCl71iSAqvY0EUR9IiDFfm2zLpmpbs9YjiM4C3mMXL8RNkWv+nVjyqpuTydty+Q8x+/J9xum4EdDg1e6l9vebmzCFYz23ws/2CgoTT3T/PvS6Xv21qvs6yYMHPy9e4733FZ91ezr+08BFh0u4tKzZo/bOdBHyM+t0xUT7IscaoL9N0zciBf23s+BA7nK6v7lfIibUERAXQ5I17bDL17c8PMqx/8JxnGwjoP1uRfxuVw2PkbL/wIBCWqK9xWTeQAAAABJRU5ErkJggg==" alt="">
+        <span class="ph-title" id="pv-title">EsSalud MiConsulta</span>
+      </div>
+      <div class="prev-tabs"><div class="prev-tab">Virtuales</div><div class="prev-tab on">Presenciales</div></div>
+      <div class="prev-banner" id="pv-ban">MEDICINA GENERAL - CONSULTA MEDICA</div>
+      <div style="padding:10px 14px 4px">
+        <div class="prev-card-mini">
+          <div class="pcm-est"><span class="pcm-lbl">Estado:</span><span class="pcm-val" id="pv-est-t">PENDIENTE</span></div>
+          <div class="pcm-est"><span class="pcm-lbl">Fecha:</span><span class="pcm-val" id="pv-fec-t">24/06/2026 - 09:48</span></div>
+          <div class="pcm-est"><span class="pcm-lbl">Centro:</span><span class="pcm-val" id="pv-cen-t">POL. SANTA CRUZ</span></div>
+        </div>
+      </div>
+      <div class="prev-modal-title">DETALLES DE LA CITA</div>
+      <div class="prev-body">
+        <div class="prev-row"><span class="pl">Estado:</span><span class="pv" id="pv-est">PENDIENTE</span></div>
+        <div class="prev-row"><span class="pl">Fecha de Cita:</span><span class="pv" id="pv-fec">24/06/2026</span></div>
+        <div class="prev-row"><span class="pl">Hora de Cita:</span><span class="pv" id="pv-hor">09:48</span></div>
+        <div class="prev-row"><span class="pl">Especialidad:</span><span class="pv" id="pv-esp">MEDICINA GENERAL</span></div>
+        <div class="prev-row"><span class="pl">Médico:</span><span class="pv" id="pv-med">CUEVA RIOS MARGARITA</span></div>
+        <div class="prev-row"><span class="pl">Paciente:</span><span class="pv" id="pv-pac">FRANCO MORENO MAYRA</span></div>
+        <div class="prev-row"><span class="pl">Centro:</span><span class="pv" id="pv-cen">POL. SANTA CRUZ</span></div>
+        <div class="prev-row"><span class="pl">Consultorio:</span><span class="pv" id="pv-con">04</span></div>
+        <div class="prev-row"><span class="pl">Modalidad:</span><span class="pv bl" id="pv-mod">PRESENCIAL</span></div>
+      </div>
+    </div>
+  </div>
+  <button class="btn bp" onclick="dlDoc('cita-doc','cita_essalud')">&#128229; Descargar PNG</button>
+  <button class="btn bpdf" onclick="dlPDF('cita-doc','cita_essalud.pdf')">&#128196; Descargar PDF</button>
+  <button class="btn bs" onclick="pg('cita')">&#8592; Editar</button>
+</div>
+
+<!-- ═══ PREVIEW RECETA ═══ -->
+<div id="pg-pvr" class="page">
+  <div class="preview-card" id="receta-doc">
+    <div class="prev-hdr">
+      <img src="data:image/png;base64,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" alt="">
+      <span class="ph-title">EsSalud MiConsulta - Recetas</span>
+    </div>
+    <div class="prev-tabs"><div class="prev-tab">Anteriores</div><div class="prev-tab on">Mes Actual</div><div class="prev-tab">Siguientes</div></div>
+    <div class="rec-header">
+      <div class="rec-num" id="rv-num-t">RECETA N° 4446725</div>
+      <div class="rec-info" id="rv-info-t">H.III SUAREZ-ANGAMOS — CABALLERO RUPAY MERCEDES</div>
+    </div>
+    <div class="prev-modal-title" id="rv-num">RECETA N° 4446725</div>
+    <div class="prev-body" style="padding-bottom:4px">
+      <div class="prev-row"><span class="pl">Médico:</span><span class="pv" id="rv-med">CABALLERO RUPAY MERCEDES MGDALENA</span></div>
+      <div class="prev-row"><span class="pl">C.Asistencial:</span><span class="pv" id="rv-cen">H.III SUAREZ-ANGAMOS</span></div>
+    </div>
+    <div class="meds-title">MEDICAMENTOS:</div>
+    <div id="rv-meds"></div>
+  </div>
+  <button class="btn bp" onclick="dlDoc('receta-doc','receta_essalud')">&#128229; Descargar PNG</button>
+  <button class="btn bpdf" onclick="dlPDF('receta-doc','receta_essalud.pdf')">&#128196; Descargar PDF</button>
+  <button class="btn bs" onclick="pg('receta')">&#8592; Editar</button>
+</div>
+
+<!-- ═══ PREVIEW CITT ═══ -->
+<div id="pg-pvcitt" class="page">
+  <div class="citt-preview" id="citt-doc">
+    <div class="citt-logo-row">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABQCAYAAADSm7GJAAAfQUlEQVR42u2dd5RcxZX/P1UvdJjpCZqskTTKKACSyMnGsjHG5Aw/L2DSmmDjNV7s9fkZ7zod2+uf14vzLs6wLDnYJINJIooglBDKcaTR5NjT4b1XVb8/3pueGUkISUgw2FPn9NEcne73Xte37r3f+723qoUxxjA6/maHHJ2CUYBHxyjAo2MU4NExCvDoGAV4dIwCPDr+JgA2B+iaZhTgD3ZoE74EYKK/9wewShsE4XWVNn8zQIsPk5JlMAgEAJ7WuDJcn8YYhCCCZ9+HbzQCsIXc6X4f1mF/WB5UGYMlBOu6+/nXZ7fyZluOCUUOXz2+jpMmlqOMxhJiry1XAGnP5zsvNvLo2ixIzemTi7n5o+MocmyMASFGLfjAx1tjyCnFR25fxaJNHhTZkNckY5o3rz6I6WOKMMYg9wKN0L0bLnhwLQ8s7YFELIQ843H+3BR3nTMVgUR+iAH+UMRgY8AgWNmeZVGzh13iIqXALbLJ5AxPbezBGLNX8VgbgxTwZkuaB1b1Y6cSWDZYtsEujXHfqj6WtKSRInzvKMAHFOAQjPaMj1DhhA+8hBBs7fORQiD2ghoNvLMz44HRmMiilQFjBAhDRy44YIx9FOAh1iuF4PWmHm56ehtGWlFQlGgNxnH5zdIu7lrRghR7DrEQIXBza1JUFEuUHyCERAqJyisqE4J51cloksQowAeUKIiQZI0tdhhTbGOUQQiFMRB3NTEhyQa6YO179sUFgTZUF7ncd84kqhKA0aAMDaWG/zlrElXJeJiSjcbgA0oD8bXmmPoybj97Ig3FgAJLSIyG2eUWy645iCvm1GHg3UmWAQ0EWuNIARia+z2ktDEItDHUljgcXlscsXcdupEPqaMe0SxaG5CEJvTgmg6+8JdGmvoFwhEYE4KsPJ/LD0nx69MnY0VSxe4wVtHXtYRgfVeGm57eykNvpyHmgjQIYTB5zfhSw+1nTeLE8WUobZCSD2VOPGIBDrTGlpK81tz83BZ+tLADpIu0B1htSKqklKi0x2WHp/jD6VMxJvx/sQPKBoPSYEdW+4tFTfzb86109IOVcNFaM6BfSSnQniEmPf7z5Hqum1cXsvRoYYwC/B5zXq0NlhS83Z7mmkc38WKjH4GgdukobUsS9Oe58rAUvz1tKloLhBy0N21MBLpkRXuaL/+1kSfX5yDm4FigtN4pxZICBBKVy/L5I8q55VNTsIXA12GuLflwxOYRBbAeIlT8cXkLNz3VRHs2EtuEh+W6qB2QEAgwAqM1eJrPHZHiv0+dUmDgg4zZ8L2XtvLdl9rJ+RYIA9oPaYhlIV2JHnptAeQVuA7kfY4fH+fWUycwq6pop1yaEey65UiyXCkEvV7A5x5bz+UPbaM9LZGWzxnTYtxycg1xoRg6nVKA8RXzG2w+MzMJQnPrGz18/smN5JVCG4PB8MLWXo78zTJ++EobRXEHLI9Tpye494IGbj2jnpljLHQ2QIrB6YgJuGJeiipXgRKs6cqzPd3Pc5t7eHBNO63ZfJiWmZGdKY8ICx6oDq3uTHPGPetZ1xhQVCE4d1oJV8+t4KMTyvnF4ma+8HAzVpGN0roAsA4Mk8st3r56Br9c1Mw3FrTR3xnw24vruXLOWJ7e2M7nH9vMZfNqmFcTJzCG8pjF+h6Pv25IMyZmccEh5fzstVbuXZHBSdgEGkze4/WrplORsLn5yY1cflQtv1/SwZ1Lu8GSTCgR3Hv+FI6qKxnmecJwIEaM+x4RxQYRudFi16LYNtwwfwzXzqtiVmWYquSVz68XtYJtDctztQFhSza0e7y4pY8bjxrH3NoUP124jU4PjvvdW5w3u4xnPzuL7rzPrJ+/DY7NWTPK+NPbvWG+pAz3renh/vMn88Km9TT3eLgpF8/Aqg6PS2YXc8cFM/l/r27jzjd6cMrjgGFLl+IrT23l6X+YUVDBLCH2Sgv/+wE4mpNxqQSLrj4EKawIWI0tBQu397OsNUC6MYxRwz5rCQgUPLslzccmljF/QinzJ6T43dJmXtma45XNLdzxVg+Xzy3nltPGs63P57/f7EK4LpalsaRke6fHs5vTPHTBRG5d0skflvcCgs6sVyhILG/px07YYBTKCGQMNvYFIeEqgKpZ352nNG5TGXcK1arRGDwklZHCQkU6sy1Cq7j77Q6MAin0TtFOGwOWxdNbekPFSxuUFlw5ZyyLr53OyTMSLG7M8E+PNHP7sl4aylwmlTsYpdAavECDY/GtF5u44k9bOGlyCdcdMQYyPm1ZHylCbjB/YilB1iMwEiFCfnbCuDhbe7PcvbKVLz+1maNvW8XUHy/n357dGObc+oOPzSMyTRJD/u3Kexz8m1U09RmELdjxaQdKDEl8ll49g6nlSZQJuzNCbdpw65JmvvNCO9va/NDkEzZIg6VBBZpzZhRx4vgkP17Ywexal599ajzTf7qSyw6r5HenTsQLNDFb8v2FTXz7hTa86J7jiiV9+YDuNJD1oQguOXgMXz66mrk1KUYCvx5xBf+Cs4ty4b9s6KapS2HFnVA23MWCsKQgk4HnG9NMLU+GKpcUEeGBa+bWccqkMr774lbuXZOjLzAYIzACpDDMbyjmhsNrqU8JevOS/3i1HWk5bOjIIDDEbMnWvixtmTyI8LMAjb0afEE8ZrhoXhk3HlHLnAjY0Rj8rnE5nMQ73uoEwW5KgSGICMHTm/u48tDqIWmUiGK5oaE0wU8/PYk3WlaxtFUj7HABICVffLyZtR05TplaxE1PNrJ5uwFXMKM8QaANP3mtif94rY3tPQbidnhPIZBoLjikiJuOquGIulRBChWIEdMkMCIB1iZMgdb3ZHmuMQvOrq2XIdaObfHC5n56PZ8S1yksB60NMUuwpLWPyx7ayPIOjXRkSJ6MoC4l2d6r+dmCdhp7fe65eDq/f72VOfVJxqZcjv3DKt7YmgsvFncQkaAphUH5mplVCY6oS+EphSXliJMy5cgEOITnvrc76E8rLGv3UoIGhC3Y2uuzuCVTIDgDrvqelW18/LZ1LG8zSMdCG7AlkPf5h1klPHHRRD4yM8VDi3s48671fHx6Ka9uz3DWH9fxxqYs1WU21x9VxvzxLsYP1SutQcZsvv3cdp7b0oX7bg85CvCQmCrCYsPdq3vBdsM67ZAgLQSRixxodBVYAqSyeHZzb+iapEAKw/99bgsXPbCFLi2xYnZh8RgDSMnylixVccm1h43h1xeMx5GCC3+7nj+80cWZh47h9xeMY/GV0/nFKZPxAw1GFB5ECtA43PDkNtJBAGJnEjgK8C6sVwjBouY+VrTksGICZULpWAJogVESo0CrEF6JQGuB8jUPrOwADOs6M5x0x0q+/3wHMhZDSoEakkMPpFcrO/Ks6M7zlb9u4eq5Naz43Cx+938aePQzkzh1cjGNXVnGFsfZ3NPPktYMOBJhBEZLFGDHLd5q8vnOC9uwxMhIjUZ2DI7yo58vasfrUVBihf7UGLQGV2qSjqHIBtsSbOkPe6jK4oKb59cwrTSONpp1Hf20pgOKiy0yKqwpW5JCc54BhA2NvQZjJJcfXEpWa0pch6zSfOHxbWzs9LBigi8dO5513T7pvMRyBUYZKhKKjoxCWxZ20uGWhe2cMa2ME8aVFlp8Ry14F8OSgrwKKLYM136kilOnxRGBwSg4ssZh6VXTWHb1DJb94yyWXDWDORU2RgmyeZ/TJpVxxrQKlBGcMq2KZdcczKRSAcqglUFlFNqPJl9IrKhYsbojyw1H1mGZkKs39npsbAtIlCTRASxtTbOqIw8+CCnQ2uO+c8fz/Y9WozMBAoGPw/V/aSTrj6xGvRFJsmxp8atTp/KrT0+kPulgAgNGcdPRFcwYk2R8Ks6YuEtZLMYXjqgEHZDLw++WdURbW0Lr+cPyDla0KrTSfKIhxg8/WcXMKgvlBQhtwh0RlmRRU4bakuJCRD9zahkyYQiUwQSCZc1pljT3gxQEuYCPT0rysXGlfO24en5yei1BPotlWyxv9vnmS41YQgwvPY4CvONDhTlqc7/HQ2vTCATzah3Onj4mkjHDGGoMXDyjgmlVEoHN4xt68HSAI6Er5/PtF5vRSjC1Au44YyJfOaaeJVfO5M5z6khIH4PECMGrTVm68h6OFS6M2dUpxpY4+MogXEF1ymVRSw4cG4zPPx9VA0g8pfni4WP53/Mm4Jg8ODa3vNrJy9u6saQotAeNArwT0dIIIXhmUxdtfQFGBNxwZBWuZUdttKGIoY2hyLX53NwqjFG83aZ4takfKQT//moTG1sDSpOaO8+ZQk1RDE8ZXGlx8cxaJpQ46LzP5IoY1Ul4s7kPok7LEtfiiLo45HxqUg4Jx2Zdj49QmuMmJDl5UhnGGBxLEmjDxTOqefjiSVTHAjzP4fonttGe9ZB71an9dwQwImy3eWhNL8IXzKpxuGhmRZTXDnn4KC257OBK6sptdA4eW9dNaybPL1/rQFiaW08bxxE1KQJtcC1RqCU3lMUgpzlpYow3r5zNrPLkMDBOrE8ifM3sSpeenKIvozH4fOnICmwhCzKoLcNF8YkJ5Tz5malMqRQs3ZDmuU2dYVHiA3bVIy8Pjor/Tf15ntuaxaC5dm4lccvG0xqtBypGYcXJU5qqhMtlB5dhsjnGplyuf2Izfa0+35pfzYUHVZGLeqaVNgRasL0vTUOZAxoSliThONSkEuhIHFHacOy4EgwBMytc1nflIaOZUxfntKkVBDrcdzjwHCKSQ+dUp/jzhZN46NIpnHFQNYFWH3jhf8SlScqE3ZTPbu6mrd1nzsQkNxxRC0DMkrtk3QBfPLKKZc3dXDKrlNe29vC102r4xvHjQ4XRHmr2mnvfbmVOdTGCVhpK44WGA4TAit529NgSamocDqtL8Pi6XoQ0fOejNSRta9fsP/p3VkUxsyqKR44zHEnlQmUMEsPdb7fx9eda2NClOKjW4SPjisirdxbwhTEgJK9tz1CVgFmVCQIk+cAUihEGsDD0eJo3mnPUlzq8sr6fwxuSzK108bQp9GQZI7CE4fGNaaaNcVnS4tGXN1w0O0lCWrvd7TBA/hxLkM8rPj2tiEtm135gufGIAnigF/qfntzEra93Ulri0O8HZLwIJLFzfdVgEEYChpgj8LUgCPSgpMnwGrMlBAlL4mtN0rXI+oqcMsOva8I6c1FMkleGuCWwhKA7rwZjyLtoNbYUeBmfLx5Xw08+2UCgTdST/XcM8MDI+Ip0JBgIEerMu39IUWDfkgFUB1bDzp/UOgRfD2Hkww5tiCxUFd5nCuFA7KGIIQivH7csilwr4tOjAP9NDjNsGf69a9GR2x0py26w7VkT7nvaO5jCMCHe83wMrBIzRAzak8vukwUbBvcH7c2npNh/27fMEEIDw2OtEAeqo0IP3OF9XGAabcQuCNqezf/eA/wB94IO3bv0bu9TEWnbJ0Yf3ePhdZ388KVmnFgMqX1+e1oDDaWJYc3uB9Z7hBP++SfW8VZ7gNFwQkOS7584YY+ewd5rbIWhPeuxsj0XTbLZ4wmbUZGgKhnb5zUSfuGwl7nPD3ilsYclrVk6MuHOwJKYzZRSmzl1xcyqSO4zuENd4ZZenxfX9kORApUn7ev3myYhBLy0LceyRh+0Ie4K2MOZ3yuAByxnweY059+5HhIug+cM7eZ2QkLO584LJ3LxzNgeWeAuFS4RbuH8z9e28YvXO9jQHYAWkR4nIxdqiMUs5lXa/OO8MXxmdjUxy9pnRcm1BFbcQsYkUlsfmDJV5EqsuAXaUOTIPSZt+0SyhBQI10E6YQuM8TUoCdK8M9NQBmX2jWmaiGj4ynDZnzdw99IuiMew4jGUp8K8Z6CtR1jkA4uF2xSLWpo4aVIpE0qShZRox/u920QpTHQwi8G8j7qy2SEahgfEmLDxYS8eY59ZtBk41kBpjhtnM67IIjBml5MlpMDPSyaWWKGyJAZVHx0dsjJ08gf+X0Q5qopEgv9avJ27l/YQK0niKYPyfE6a6HJkXTFFjk0uCFjfHbCsLcOKJp8JlQnqUvHwWQVEknQh990xhAwIIXsaP4wZvmgt+c4kUukoO4h8za482OB8MGwzW4Tr+58mCSEwfsA3PzKRT04s3ePPSTF4ct3Q7+krjWOJnQC3hMDXij8ua0fGbJQyJPD54znjOH9G1U7Xz6uAR9d2sb4ziyNkYVKHhmSDIa/Cowtjlhw24crsCcbhhnJ7DxdDKKOL4QocQ0EUWHJH9j8Yypx9TAv2Sx6c8TUqKsLvTm8dMI6BnXgbuvu5661OXmrOsL3f4PuKuCupSdocVulyytQyDq8tIWYLWtMe63s1xnYI8nnOnFXM+TOqCLQuTJyJFk/Msjk3An5g4Tf3+yxs6uXlxjQrO3Jsy2gy+QABFMddppZafHpyMRfOqiJuWXh6sICwa+ojWdGW5oGVXTiOxGjDVXOrqC6KDTv+cMAiH1rVxvK2DEJY1JfYXHFILQgGT+cTsLiljwdXdfJ6i0d7VqHRlLkOR9a5tGYVQoq9DhP7BeDQlQ6w7N2JiYO7+G9d2sxXn2yiJyuiJuUBPdIHfB5dneE7L7Tyg5Nq+Zdjx5PxFZ6KvAYGGa1opU3B6ndMpYQQhd39Fz+0lgXrs2BbgwGuYBU53thquGtZDz99tYPbz53IzDFFu43PQsCStjz/+sT2kGyqgE9NKQsBHnqIaRRIf7Osi0eX9YGE2eNdrji0tjAX6SDgX57azK1Luwk8AZYV+hyjQPs8s74fXIllC5S/dwDvl3qwFVmmHQkZu3qFri/8Qs81dnPNw430aBe7OGTicRfGltlUl9g4rgKhIRCUJVwAyuI2Ja7BaIUVc/nLujTPbOkkZlthnDYGZUyBmAy4O2VC1afUlRCEvtd2DZWlkvHlNvWlFtIOQArc4gSLmgIuuH8jXXm/wN7facRsiV3kEks6OElnt8WEVNzGLnKwi1zK4k4Ujw39vuLse9fyy1e70VYcmXRAG2xbUV1qUVYiwN53cvfeLVhAJgjIBqGFWXLXlDBhi7BwJ+A3S9rB2LguBHmPfz62nKvmVlGbjBEY2N6XZUFjL3csa+fQqgQAVck4x4wt4k8rM9hJh3QgOeOejXz1qDRXz6umPhUfRphkRHhE5C9PnJDCAc46qIxDaoqpSznEHQetNGs7+7l5QQt/3ZghlrJZ0ZTjrhUdXHdY7W77qowhLP5rEzYL7C7FNIYgcq8qOlrCEpIfvLyFp1eniZUm8LwARyq+dPwYLp5ZwdiSGL4yvNnSx3VPNNHcv/ensr0ngLUx4Dh84a/NfO3ZZoaEwyHyoQAT8PCFUzi4MoVBsa7DQzg2Xk7xsYYYP/r4xGHXrUqkOLQ6xfWH16ICE1aJhOTm42t5Yt0acr6F69hkAodvLujgZ292cfKkYs4/qIRPTi4j5TqF+DdAUr50dC1fPrp+5y/hSI4aW8r/nhtn9n+toj1vEJbFM1t6ue6w2gOmtUskbRmPXy3tRiZj+IEmIRUPnj+JkyeVD3v/uFSMHy5so6nXe58tOIpjrWlFq4KQlphdrQSygRiUyYUEEyCkoKlP0ZTOMbZ40AJ9bdBaE7MtLNsUjkg4oraEO86ZyJV/2kJPv4C4S6w4RoenuXN5mjuXdzG5oplLZ5dx4zF1lLp24SQcgcQLDKBxbLlTAaAyFmNuXZIn1/aDZbGtTxcY/H5XtKMpWrClm44+n1giQT6d47qPlHPypHK8QGFbIS8JlUoTkcn320WH598zvsSmxAWtd84hDSC1RZETCucCyZwah4Wbs8RSDmu6Ao67fQ2Xzy5j/sQSZlYkqC6KgbSiyQhj6UD99tzplRx0ZZx/f7GZh9f3hpuvbYkdt7GExYZuxbeeaeP+VV3cd/4UDhpTVNgQ7toCsMgFPu05TS4YzDNtCb4aZCXBASxnDVx5RVsOoUFjkI7k/BlVodexZOFg1YHiyb4WAN4TwFIItBfwk5PqOXPqGDz9zmlSuPtEIIThhiOruWtFNz39Cjths7kPvvV8J996uZ3KpODQigSnTyvhqrkVlLix6Mj+AdKkmV1RzG1nTWVzT5YHVndx/+puXm7yCHyBHbeQMZu3WnzOu389L146k1TMRgrBo+s7uG1pO0vb8rTnIe2HlhE6TIFGY7kSlTfvy9aE5qzBYBMoQ3lC0lDiRudT7z+vsV9YtCMtLCmJ2RauJXf5kkJGvcwwuyLFIxdP4bA6SZD3Ie+DZUA6tOcdntmS58uPNfOx21fR2JsFRMGtWUIWznVuKE1w41FjefHSmbx06WTOm5Ug8LxQMCmyWdHkcdvyFiwhuPHpjZz+Pxu5Z1WW1R2Cjm4PP9AkbUGRHZJAIXlfgC2kjIEKI7IxxKO5g/1brNsvebBmsD77TgVxMSR/1EZzQn0ZC68o5uWtfbzQ2MfCphxLWjJs69HguMRKbRZv9bn+yU38+bwZw64ih4gIAz/IcezYEu47t4TvvdTI1xd0gLQQ0uL15oCXm3q45aV27OIijAqoL9LcfHw9x9enKItbaCGwheTShzfz1Ib+4ZLXAXTRjuMUJiWnFJ5WEST7ryZr768VuWPOu5viVyFVcKTNiRPKOXFCyBo7snkeWdfD1xY00dJvYRVZPLUpx6beHJNKE/h6uLwpo1ZXQ5iuSCH40jH1/GJpN019YUrRFygeWNWJwAY0koA7zp7CCfU7S6sJGzBymBUPHJW4K2c3/KhE8JTas99eit4wrthCROXP7qzHtr48NYkwJO0vcrdflupAjqd28wr0kO4LEXYoBDpsXM8rg68NpTGXzx5Szc3H12K88KjAnJK0ZFVBj5ViMP8cuOdADioFZANFPgi3vggg4UBLVmAkBIGmoczlyLoUvtKF45r8qIl+V9UuS2gQGoFGIYd9z9KYCCtoAggMjWkv/FMP7p9SQ/LfoSoYwOG1LiY6wF77hnve7iyIM6rwswXv7Xec9gvAqZiFLQVuJNrv6mXLSDY0mo3d/WSVX/hMzBI40XsANnRkQVhoBJZQlDiSvrzPd1/YxJrODEKEban2kOs7UpD2A7761BY60hrXsTGB4oSxCYodC2FC8aOj36c95+NYcoiSGFq/LWSooA2JKSVxG6Lzuoyv2NaXK9xzdqVLUXywUvn7peHm85glCxUhxwqf0x7i2wZk1ePGlzGl0iXwAqxEjF++0c0j69rDeYyMwJIUvt++oPyeXLQxBmybH73azIOrO/CV2OWSkQICL+DqeTUcNbaEzz22iW09AafNKGN2pUtV0kVKSUfG4y8b09z5VjdOwiXwFQ0lkqllcdZ2ZfjGgnZ+8Fo3x9S7HF1bTH1ZnJStySpY3eHx8Lou1rYZYkmHfC6gugwumV3Jbxe3YFTYN92VEVz72EZ+/InxTCtPhGtcQJ/n05tXDPSyRRsNmV4ex3JEuCFOOnz9+VbSeWjP+lx6SBXnTUtx25tpYiUOj6zp57R7V3P1nComl4ZHHrZmPF7ZnuWZrf1IR2CC8IA3YwxFts03jqvi8vsbkakYGSM4+77NXDmnh3Omj6E+5eBrWNWeY2N3gLTCz+9NYcneV7MvnMvoSB5flwWV3X19MOszf8oYDq/VvN7q09MHK1/uCinaQKIb7cSXsTi+UpD3+NpxY3EtydLWDPiGftfi6Y0BT6+PPouOhHkJjkQmIN+vKHED7jh7MqUxl/NnV3LLog4au3zshMsj67M837iGgytjlCXC5vot3QHb+g1OzMbPGHKRMHNwRZIj62Is3OIRL3JZ3KK48MGt4PvMrSvmB/Mn8PTGFWzrDrCSCR5bn+WxtY1Rzh3+QhsKcB0cW+DnNL05Vei3/uwhNazuzPP9Ba3guBg3zq8X9/HrpT24NigtUT4I18Z1LPL5PP2BOrAuOq81Ku/j5xQqq4hOFNvNK+z2COOT5qNj4xQnQ4UGI0AJCCK/qEDn8kxMaG49u55r5tahjebEcSXceEIl45JBVHEayFWdyAoN+Arpe5wy2eGZz07jpInlBMowIZXgsYum8omJLkE+3Knfmxa8vC7HY8v6WLAyx8bmAC9r8LMeSSfPvGoXg8KWkp9/agLjUoJcbxaC6N4+vLGtj7riGE9dMp0zZ8QwQTYE0wg83+D5BpQVfq+8h5/LMbZUc8GsUgbOrNfG8L0TJ3DnBQ0cUinRXj6aDwcv56A8CUhMziefzZKIKQ6t2HO73KuuyoE6Z1M6zytN/ViW3KO4IBAopThybLg7H2BDT5alLRlWd+RpyQT42mBLqCmyObQqwQnjU5S6TpR6DbLvrpzHm80Zlrbl2NKbJ53XCAxlcYvpFQmOGZvkkKriIaVJCl0jYFjY1MdL2/pY25GnK5NHa41j21QkY4wrcZlVGefgqjiTShOFH/CQQrC9P8+Dq7rY1JvHlpLxxQ6nTC2loSReiKlvbO9lwZZeVnTk6enPh8w8ZlNVFGNiqcuhVUnm1iQoj7s7tOOEHMDTipe29PFyUz/rOrP0ZHNIAWWJBONLYxxcGWduXRFTSuO7r83uK8D7LQ/cw6LI0A1bZqChQO5JrwWFjeJD9d997ZV+t88OTZf29XrKDMb9/Sqq7HPj+z40oEkhhnU6GGN2arYzDPZiiXeYTM3ODe8DfHhX/VY7LpqdADHDm/521ThvDDuVDi0x/OBvtUMj/o7ChhBhbfqdHm94M3/UsBB5kd0924iz4NHx/o3Rn3gfBXh0jAI8OkYBHh2jAI+OAzDsD/fPH4+Odxv/H2DOONMsUbGnAAAAAElFTkSuQmCC" alt="EsSalud" style="height:44px">
+      <div style="font-size:10px;color:#666;line-height:1.4">Seguridad Social para todos</div>
+    </div>
+    <div class="citt-form-row">
+      <span>Formulario <span id="cv-form">8003 - 1</span></span>
+      <span>USUARIO</span>
+    </div>
+    <div class="citt-titulo">Certificado de Incapacidad Temporal para el Trabajo</div>
+    <div class="citt-row"><span class="cl">EE.SS</span><span class="cv" id="cv-eess">408 POLIC. NIVEL I MARINO MOLINA SCIPPA</span></div>
+    <div class="citt-num" id="cv-citt">A-407-00025421-23</div>
+    <div class="citt-row"><span class="cl">Acto Médico:</span><span class="cv" id="cv-acto">10034250</span></div>
+    <div class="citt-row"><span class="cl">Servicio:</span><span class="cv" id="cv-serv">AB1 MEDICINA GENERAL</span></div>
+    <hr class="citt-sep">
+    <div class="citt-row"><span class="cl">Nombre Asegurado:</span><span class="cv" style="font-weight:bold" id="cv-nom">NOELIA CRISTINA HUAPAYA ESPINOZA DE ALBARRAN</span></div>
+    <div class="citt-row"><span class="cl">Doc. de Identidad:</span><span class="cv">D.N.I. &nbsp;&nbsp; <span id="cv-dni">73077022</span></span></div>
+    <div class="citt-row"><span class="cl">Autogenerado:</span><span class="cv" id="cv-auto">8705248SDCM003</span></div>
+    <hr class="citt-sep">
+    <div class="citt-row"><span class="cl">Tipo de Atención:</span><span class="cv" id="cv-tipo">EMERGENCIA</span></div>
+    <div class="citt-row"><span class="cl">Contingencia:</span><span class="cv" id="cv-cont">ENFERMEDAD COMUN</span></div>
+    <div class="citt-row"><span class="cl">Med. Contro:</span><span class="cv" id="cv-medcon"></span></div>
+    <div class="citt-row"><span class="cl">F. Prob. de Parto:</span><span class="cv" id="cv-parto"></span></div>
+    <hr class="citt-sep">
+    <div class="citt-section">PERDIO INCAPACIDAD</div>
+    <div class="citt-row"><span class="cl">Fecha de Inicio:</span><span class="cv" id="cv-fini">24/09/2024</span></div>
+    <div class="citt-row"><span class="cl">Fecha Fin:</span><span class="cv" id="cv-ffin">24/09/2024</span></div>
+    <div class="citt-section">DÍAS ACUMULADOS</div>
+    <div class="citt-row"><span class="cl">Consecutivos:</span><span class="cv" id="cv-dcon">1</span></div>
+    <div class="citt-row"><span class="cl">No Consecutivos:</span><span class="cv" id="cv-dnco">0</span></div>
+    <div class="citt-row" style="margin-top:5px"><span class="cl">PP. SS. Tratante</span><span class="cv"><span id="cv-mcargo">MEDICO</span> &nbsp; <span id="cv-mcode">63832</span></span></div>
+    <div class="citt-row"><span class="cl"></span><span class="cv" id="cv-mnom">CESAR ANTONIO REBAZA VARGAS</span></div>
+    <div class="citt-row"><span class="cl">RUC:</span><span class="cv" id="cv-ruc">20600593685</span></div>
+    <hr class="citt-sep">
+    <div class="citt-obs">OBSERVACIONES</div>
+    <div class="citt-dias-total">Días de Incapacidad Temporal Acumulado: &nbsp;<span id="cv-dias-total">1</span></div>
+    <hr class="citt-sep">
+    <div class="citt-row"><span class="cl">Usuario:</span><span class="cv" id="cv-usr">CRISTOPHER JOHEL PALOMINO NAJARRO</span></div>
+    <div class="citt-row"><span class="cl">Fecha:</span><span class="cv"><span id="cv-ufec">24/09/2024</span> &nbsp;&nbsp; Hora: &nbsp;<span id="cv-uhor">08:47:23 AM</span></span></div>
+  </div>
+  <button class="btn bp" onclick="dlDoc('citt-doc','citt_essalud')">&#128229; Descargar PNG</button>
+  <button class="btn bpdf" onclick="dlPDF('citt-doc','citt_essalud.pdf')">&#128196; Descargar PDF</button>
+  <button class="btn bs" onclick="pg('citt')">&#8592; Editar</button>
+</div>
+
+
+<!-- ═══ RECETA ÚNICA ESTANDARIZADA ═══ -->
+<div id="pg-rue" class="page">
+  <div class="card">
+    <div class="ct">Receta Única Estandarizada (RUE)</div>
+    <div class="fld"><label>N° Receta</label><input type="text" id="rue-num" value="RUE00056259-25"></div>
+    <div class="fld"><label>Centro / Establecimiento</label>
+      <select id="rue-centro">
+        <option value="CENTRO DE EMERGENCIAS ANCÓN">ANCÓN</option>
+<option value="CENTRO DE EMERGENCIAS ATE">ATE</option>
+<option value="CENTRO DE EMERGENCIAS BARRANCO">BARRANCO</option>
+<option value="CENTRO DE EMERGENCIAS BREÑA">BREÑA</option>
+<option value="CENTRO DE EMERGENCIAS CARABAYLLO">CARABAYLLO</option>
+<option value="CENTRO DE EMERGENCIAS CHACLACAYO">CHACLACAYO</option>
+<option value="CENTRO DE EMERGENCIAS CHORRILLOS">CHORRILLOS</option>
+<option value="CENTRO DE EMERGENCIAS CIENEGUILLA">CIENEGUILLA</option>
+<option value="CENTRO DE EMERGENCIAS COMAS">COMAS</option>
+<option value="CENTRO DE EMERGENCIAS EL AGUSTINO">EL AGUSTINO</option>
+<option value="CENTRO DE EMERGENCIAS INDEPENDENCIA">INDEPENDENCIA</option>
+<option value="CENTRO DE EMERGENCIAS JESÚS MARÍA">JESÚS MARÍA</option>
+<option value="CENTRO DE EMERGENCIAS LA MOLINA">LA MOLINA</option>
+<option value="CENTRO DE EMERGENCIAS LA VICTORIA">LA VICTORIA</option>
+<option value="CENTRO DE EMERGENCIAS LINCE">LINCE</option>
+<option value="CENTRO DE EMERGENCIAS LOS OLIVOS">LOS OLIVOS</option>
+<option value="CENTRO DE EMERGENCIAS LURIGANCHO">LURIGANCHO</option>
+<option value="CENTRO DE EMERGENCIAS LURÍN">LURÍN</option>
+<option value="CENTRO DE EMERGENCIAS MAGDALENA DEL MAR">MAGDALENA DEL MAR</option>
+<option value="CENTRO DE EMERGENCIAS MIRAFLORES">MIRAFLORES</option>
+<option value="CENTRO DE EMERGENCIAS PACHACÁMAC">PACHACÁMAC</option>
+<option value="CENTRO DE EMERGENCIAS PUCUSANA">PUCUSANA</option>
+<option value="CENTRO DE EMERGENCIAS PUEBLO LIBRE">PUEBLO LIBRE</option>
+<option value="CENTRO DE EMERGENCIAS PUENTE PIEDRA">PUENTE PIEDRA</option>
+<option value="CENTRO DE EMERGENCIAS PUNTA HERMOSA">PUNTA HERMOSA</option>
+<option value="CENTRO DE EMERGENCIAS PUNTA NEGRA">PUNTA NEGRA</option>
+<option value="CENTRO DE EMERGENCIAS RÍMAC">RÍMAC</option>
+<option value="CENTRO DE EMERGENCIAS SAN BARTOLO">SAN BARTOLO</option>
+<option value="CENTRO DE EMERGENCIAS SAN BORJA">SAN BORJA</option>
+<option value="CENTRO DE EMERGENCIAS SAN ISIDRO">SAN ISIDRO</option>
+<option value="CENTRO DE EMERGENCIAS SAN JUAN DE LURIGANCHO">SAN JUAN DE LURIGANCHO</option>
+<option value="CENTRO DE EMERGENCIAS SAN JUAN DE MIRAFLORES">SAN JUAN DE MIRAFLORES</option>
+<option value="CENTRO DE EMERGENCIAS SAN LUIS">SAN LUIS</option>
+<option value="CENTRO DE EMERGENCIAS SAN MARTÍN DE PORRES">SAN MARTÍN DE PORRES</option>
+<option value="CENTRO DE EMERGENCIAS SAN MIGUEL">SAN MIGUEL</option>
+<option value="CENTRO DE EMERGENCIAS SANTA ANITA">SANTA ANITA</option>
+<option value="CENTRO DE EMERGENCIAS SANTA MARÍA DEL MAR">SANTA MARÍA DEL MAR</option>
+<option value="CENTRO DE EMERGENCIAS SANTA ROSA">SANTA ROSA</option>
+<option value="CENTRO DE EMERGENCIAS SANTIAGO DE SURCO">SANTIAGO DE SURCO</option>
+<option value="CENTRO DE EMERGENCIAS SURQUILLO">SURQUILLO</option>
+<option value="CENTRO DE EMERGENCIAS VILLA EL SALVADOR">VILLA EL SALVADOR</option>
+<option value="CENTRO DE EMERGENCIAS VILLA MARÍA DEL TRIUNFO">VILLA MARÍA DEL TRIUNFO</option>
+      </select>
+    </div>
+    <div class="fld"><label>Paciente</label><input type="text" id="rue-pac" value="CHRISTIAN ALONSO PURIZACA QUINTANA"></div>
+    <div class="r2">
+      <div class="fld"><label>Edad</label><input type="text" id="rue-edad" value="24"></div>
+      <div class="fld"><label>Fecha Atención</label><input type="date" id="rue-fecha" value="2025-11-28"></div>
+    </div>
+    <div class="fld"><label>Diagnóstico CIE-10</label><input type="text" id="rue-dx-cod" value="J02.9"></div>
+    <div class="fld"><label>Diagnóstico descripción</label><input type="text" id="rue-dx-desc" value="Faringitis Aguda (diagnóstico clínico y epidemiológico)"></div>
+    <div class="fld"><label>Tipo Atención</label>
+      <select id="rue-tipo">
+        <option>Consulta Externa</option><option>Emergencia</option><option>Hospitalización</option>
+      </select>
+    </div>
+    <div class="fld"><label>Especialidad</label>
+      <select id="rue-esp">
+        <option>Medicina</option><option>Cirugía</option><option>Ginecología</option>
+        <option>Pediatría</option><option>Odontología</option><option>Otros</option>
+      </select>
+    </div>
+    <div class="fld"><label>Tipo Demanda</label>
+      <select id="rue-demanda"><option>Demanda</option><option>SIS</option><option>Intervención</option></select>
+    </div>
+    <div class="fld"><label>Médico (nombre completo)</label><input type="text" id="rue-medico" value="JUAN PEDRO VALDIVIA ACOSTA"></div>
+    <div class="fld"><label>CMP</label><input type="text" id="rue-cmp" value="040060"></div>
+  </div>
+  <div class="card">
+    <div class="ct">Medicamentos</div>
+    <div id="rue-meds-list"></div>
+    <div class="badd" onclick="addRueMed()">&#65291; Agregar medicamento</div>
+  </div>
+  <button class="btn bp" onclick="goPvRue()">&#128064; Ver vista previa</button>
+  <button class="btn bs" onclick="rstRue()">Resetear</button>
+</div>
+
+<!-- ═══ DESCANSO MÉDICO ═══ -->
+<div id="pg-descanso" class="page">
+  <div class="card">
+    <div class="ct">Constancia de Descanso Médico</div>
+    <div class="fld"><label>DIRIS/DIRESA/GERESA (Distrito)</label>
+      <select id="desc-diris">
+        <option value="LIMA SUR - ANCÓN">ANCÓN</option>
+<option value="LIMA SUR - ATE">ATE</option>
+<option value="LIMA SUR - BARRANCO">BARRANCO</option>
+<option value="LIMA SUR - BREÑA">BREÑA</option>
+<option value="LIMA SUR - CARABAYLLO">CARABAYLLO</option>
+<option value="LIMA SUR - CHACLACAYO">CHACLACAYO</option>
+<option value="LIMA SUR - CHORRILLOS">CHORRILLOS</option>
+<option value="LIMA SUR - CIENEGUILLA">CIENEGUILLA</option>
+<option value="LIMA SUR - COMAS">COMAS</option>
+<option value="LIMA SUR - EL AGUSTINO">EL AGUSTINO</option>
+<option value="LIMA SUR - INDEPENDENCIA">INDEPENDENCIA</option>
+<option value="LIMA SUR - JESÚS MARÍA">JESÚS MARÍA</option>
+<option value="LIMA SUR - LA MOLINA">LA MOLINA</option>
+<option value="LIMA SUR - LA VICTORIA">LA VICTORIA</option>
+<option value="LIMA SUR - LINCE">LINCE</option>
+<option value="LIMA SUR - LOS OLIVOS">LOS OLIVOS</option>
+<option value="LIMA SUR - LURIGANCHO">LURIGANCHO</option>
+<option value="LIMA SUR - LURÍN">LURÍN</option>
+<option value="LIMA SUR - MAGDALENA DEL MAR">MAGDALENA DEL MAR</option>
+<option value="LIMA SUR - MIRAFLORES">MIRAFLORES</option>
+<option value="LIMA SUR - PACHACÁMAC">PACHACÁMAC</option>
+<option value="LIMA SUR - PUCUSANA">PUCUSANA</option>
+<option value="LIMA SUR - PUEBLO LIBRE">PUEBLO LIBRE</option>
+<option value="LIMA SUR - PUENTE PIEDRA">PUENTE PIEDRA</option>
+<option value="LIMA SUR - PUNTA HERMOSA">PUNTA HERMOSA</option>
+<option value="LIMA SUR - PUNTA NEGRA">PUNTA NEGRA</option>
+<option value="LIMA SUR - RÍMAC">RÍMAC</option>
+<option value="LIMA SUR - SAN BARTOLO">SAN BARTOLO</option>
+<option value="LIMA SUR - SAN BORJA">SAN BORJA</option>
+<option value="LIMA SUR - SAN ISIDRO">SAN ISIDRO</option>
+<option value="LIMA SUR - SAN JUAN DE LURIGANCHO">SAN JUAN DE LURIGANCHO</option>
+<option value="LIMA SUR - SAN JUAN DE MIRAFLORES">SAN JUAN DE MIRAFLORES</option>
+<option value="LIMA SUR - SAN LUIS">SAN LUIS</option>
+<option value="LIMA SUR - SAN MARTÍN DE PORRES">SAN MARTÍN DE PORRES</option>
+<option value="LIMA SUR - SAN MIGUEL">SAN MIGUEL</option>
+<option value="LIMA SUR - SANTA ANITA">SANTA ANITA</option>
+<option value="LIMA SUR - SANTA MARÍA DEL MAR">SANTA MARÍA DEL MAR</option>
+<option value="LIMA SUR - SANTA ROSA">SANTA ROSA</option>
+<option value="LIMA SUR - SANTIAGO DE SURCO">SANTIAGO DE SURCO</option>
+<option value="LIMA SUR - SURQUILLO">SURQUILLO</option>
+<option value="LIMA SUR - VILLA EL SALVADOR">VILLA EL SALVADOR</option>
+<option value="LIMA SUR - VILLA MARÍA DEL TRIUNFO">VILLA MARÍA DEL TRIUNFO</option>
+      </select>
+    </div>
+    <div class="fld"><label>Paciente</label><input type="text" id="desc-pac" value="CHRISTIAN ALONSO PURIZACA QUINTANA"></div>
+    <div class="fld"><label>Edad (años, meses, días)</label><input type="text" id="desc-edad" value="24 años, 3 meses, 25 días."></div>
+    <div class="fld"><label>DNI</label><input type="text" id="desc-dni" value="70854698"></div>
+    <div class="fld"><label>Tipo de Seguro</label>
+      <select id="desc-seguro">
+        <option>ESSALUD</option><option>SIS</option><option>PRIVADO</option><option>OTRO</option>
+      </select>
+    </div>
+    <div class="r2">
+      <div class="fld"><label>Inicio Descanso</label><input type="date" id="desc-fini" value="2025-11-28"></div>
+      <div class="fld"><label>Fin Descanso</label><input type="date" id="desc-ffin" value="2025-11-28"></div>
+    </div>
+    <div class="fld"><label>Código CIE-10</label><input type="text" id="desc-cie" value="J02.9"></div>
+    <div class="fld"><label>Diagnóstico</label><input type="text" id="desc-dx" value="Faringitis Aguda (diagnóstico clínico y epidemiológico)"></div>
+    <div class="fld"><label>Observaciones</label>
+      <textarea id="desc-obs" style="min-height:100px">EL PACIENTE PRESENTA UN CUADRO DE FARINGITIS AGUDA (CIE-10: J02.9), CON SÍNTOMAS DE DOLOR DE GARGANTA, DISFONÍA Y FIEBRE MODERADA. EL EXAMEN FÍSICO REVELA ENROJECIMIENTO FARÍNGEO Y LEVE HIPERTROFIA DE AMÍGDALAS SIN EXUDADOS. AUNQUE SE ENCUENTRA ESTABLE, SE RECOMIENDA MANTENER REPOSO, ASEGURAR UNA ADECUADA HIDRATACIÓN Y ADMINISTRAR ANALGÉSICOS SEGÚN SEA NECESARIO.</textarea>
+    </div>
+    <div class="fld"><label>Médico</label><input type="text" id="desc-med" value="DR. JUAN PEDRO VALDIVIA ACOSTA"></div>
+    <div class="fld"><label>Especialidad</label><input type="text" id="desc-esp" value="MEDICINA GENERAL"></div>
+    <div class="r2">
+      <div class="fld"><label>CMP</label><input type="text" id="desc-cmp" value="040060"></div>
+      <div class="fld"><label>DNI Médico</label><input type="text" id="desc-dnimedico" value="01200773"></div>
+    </div>
+    <div class="fld">
+      <label>&#10024; Generar observaciones con IA</label>
+      <button id="btn-genobs" class="biai" style="margin-top:4px" onclick="generarObs()">&#10024; Generar con IA según diagnóstico</button>
+      <div id="obs-loading" style="display:none;font-size:12px;color:var(--su);padding:6px 0"><span class="spinner"></span>Generando...</div>
+    </div>
+  </div>
+  <button class="btn bp" onclick="goPvDescanso()">&#128064; Ver vista previa</button>
+  <button class="btn bs" onclick="rstDescanso()">Resetear</button>
+</div>
+
+<!-- ═══ PREVIEW RECETA RUE ═══ -->
+<div id="pg-pvrue" class="page">
+  <div id="rue-doc" class="rue-wrap">
+    <div class="rue-header">
+      <div class="rue-title">RECETA ÚNICA ESTANDARIZADA N°<span id="rv-rue-num">RUE00056259-25</span></div>
+      <div style="font-size:9px;font-weight:bold;text-align:center;border:1px solid #888;padding:4px;border-radius:3px" id="rv-rue-centro">CENTRO DE EMERGENCIAS CHORRILLOS</div>
+      <div style="font-size:9px;font-weight:bold;text-align:center;border:1px solid #888;padding:4px;border-radius:3px">RECETA UNICA ESTANDARIZADA</div>
+    </div>
+
+    <div class="rue-section">
+      <div class="rue-section-title">INDICACIONES</div>
+      <div class="rue-row">
+        <div><span class="rue-lbl">N°:</span> <span id="rv-rue-num2">RUE00056259-25</span></div>
+        <div></div>
+      </div>
+      <div class="rue-row">
+        <div><span class="rue-lbl">Nombres y apellidos:</span> <span id="rv-rue-pac">CHRISTIAN ALONSO PURIZACA QUINTANA</span></div>
+        <div><span class="rue-lbl">Edad:</span> <span id="rv-rue-edad">24</span></div>
+      </div>
+
+      <table class="rue-table" style="margin-top:6px">
+        <thead>
+          <tr>
+            <th>Medicamento o Insumo</th><th>Dosis</th><th>Via</th><th>Frec.</th><th>Duración</th><th>Observación</th>
+          </tr>
+        </thead>
+        <tbody id="rv-rue-meds-tabla"></tbody>
+      </table>
+    </div>
+
+    <div class="rue-section">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div>
+          <div style="font-weight:bold;font-size:9px;margin-bottom:3px">Tipo de Demanda:</div>
+          <div class="rue-checkrow" id="rv-rue-demanda-checks"></div>
+          <div style="font-weight:bold;font-size:9px;margin:4px 0 3px">Tipo de Intervención:</div>
+          <div class="rue-checkrow" id="rv-rue-tipo-checks"></div>
+          <div style="font-weight:bold;font-size:9px;margin:4px 0 3px">Especialidad Médica:</div>
+          <div class="rue-checkrow" id="rv-rue-esp-checks"></div>
+        </div>
+        <div>
+          <div style="font-weight:bold;font-size:9px;margin-bottom:3px">Diagnóstico:</div>
+          <div style="font-size:9px"><span id="rv-rue-dx-cod">J02.9</span>: <span id="rv-rue-dx-desc">Faringitis Aguda</span></div>
+          <div style="font-size:8px;color:#666;margin-top:3px">(Definitivo/Presuntivo):</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rue-section" style="padding-top:8px">
+      <div style="font-weight:bold;font-size:9px;margin-bottom:5px">Medicamento R o Insumo (Obligatorio DCI)</div>
+      <table class="rue-table">
+        <thead>
+          <tr><th>Medicamento/Insumo</th><th>Concentración</th><th>Forma Farmacéutica</th><th>Cant.</th></tr>
+        </thead>
+        <tbody id="rv-rue-meds-tabla2"></tbody>
+      </table>
+    </div>
+
+    <div class="rue-footer">
+      <div class="rue-sello">
+        <div class="sn" id="rv-rue-med">DR. JUAN PEDRO VALDIVIA ACOSTA</div>
+        <div style="font-size:9px">CMP: <span id="rv-rue-cmp">040060</span></div>
+        <div style="font-size:8px;color:#888;margin-top:4px">Firma y Sello</div>
+        <div style="font-size:8px">Fecha: <span id="rv-rue-fecha">28/11/2025</span></div>
+      </div>
+      <div class="rue-sello">
+        <div class="sn" id="rv-rue-med2">DR. JUAN PEDRO VALDIVIA ACOSTA</div>
+        <div style="font-size:9px">CMP: <span id="rv-rue-cmp2">040060</span></div>
+        <div style="font-size:8px;color:#888;margin-top:4px">Sello / Col. Profesional</div>
+        <div style="font-size:8px">Válido hasta: <span id="rv-rue-valido">28/11/2025</span></div>
+      </div>
+    </div>
+  </div>
+  <button class="btn bp" onclick="dlDoc('rue-doc','receta_rue')">&#128229; Descargar PNG</button>
+  <button class="btn bpdf" onclick="dlPDF('rue-doc','receta_rue.pdf')">&#128196; Descargar PDF</button>
+  <button class="btn bs" onclick="pg('rue')">&#8592; Editar</button>
+</div>
+
+<!-- ═══ PREVIEW DESCANSO ═══ -->
+<div id="pg-pvdescanso" class="page">
+  <div id="descanso-doc" class="desc-wrap">
+    <div class="desc-header">
+      <div class="dh-logo">
+        <div style="width:44px;height:44px;background:#c0392b;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;font-weight:bold;flex-shrink:0">PE</div>
+        <div class="dhl-txt">PERÚ<br><span style="font-size:10px;font-weight:400">Ministerio<br>de Salud</span></div>
+      </div>
+      <div class="dh-title">MINISTERIO DE SALUD<br>CONSTANCIA DE<br>DESCANSO MÉDICO</div>
+    </div>
+    <div class="desc-row"><span class="dl">DIRIS/DIRESA/GERESA</span><span class="dv" id="dv-diris">LIMA SUR - CHORRILLOS</span></div>
+    <div class="desc-row"><span class="dl">PACIENTE</span><span class="dv" id="dv-pac">CHRISTIAN ALONSO PURIZACA QUINTANA</span></div>
+    <div class="desc-row"><span class="dl">EDAD</span><span class="dv" id="dv-edad">24 años, 3 meses, 25 días.</span></div>
+    <div class="desc-row"><span class="dl">DNI</span><span class="dv" id="dv-dni">70854698</span></div>
+    <div class="desc-row"><span class="dl">TIPO DE SEGURO</span><span class="dv" id="dv-seguro">ESSALUD</span></div>
+    <div class="desc-row"><span class="dl">Fecha de Inicio de Descanso</span><span class="dv" id="dv-fini">28/11/2025</span></div>
+    <div class="desc-row"><span class="dl">Fecha de Fin de Descanso</span><span class="dv" id="dv-ffin">28/11/2025</span></div>
+    <div class="desc-row"><span class="dl">Diagnóstico</span><span class="dv"><span id="dv-cie">J02.9</span>: <span id="dv-dx">Faringitis Aguda (diagnóstico clínico y epidemiológico)</span></span></div>
+    <div class="desc-row"><span class="dl">Observaciones:</span></div>
+    <div class="desc-obs" id="dv-obs">EL PACIENTE PRESENTA UN CUADRO DE FARINGITIS AGUDA...</div>
+    <div class="desc-firma-box">
+      <div class="dfb-firma">— firma —</div>
+      <div class="dfb-nombre" id="dv-med">DR. JUAN PEDRO VALDIVIA ACOSTA</div>
+      <div class="dfb-esp" id="dv-esp">MEDICINA GENERAL</div>
+      <div class="dfb-cmp">C.M.P. <span id="dv-cmp">040060</span></div>
+      <div class="desc-firma-grid">
+        <div>CMP: <span id="dv-cmp2">040060</span></div>
+        <div>DNI: <span id="dv-dnimedico">01200773</span></div>
+      </div>
+    </div>
+  </div>
+  <button class="btn bp" onclick="dlDoc('descanso-doc','descanso_medico')">&#128229; Descargar PNG</button>
+  <button class="btn bpdf" onclick="dlPDF('descanso-doc','descanso_medico.pdf')">&#128196; Descargar PDF</button>
+  <button class="btn bs" onclick="pg('descanso')">&#8592; Editar</button>
+</div>
+
+</div><!-- /pages -->
+
+<script>
+window.onerror = function(msg, src, line, col, err) {
+  console.error('Error:', msg, 'en línea', line, ':', err ? err.stack : '');
+  return false;
+};
+window.addEventListener('unhandledrejection', function(e) {
+  console.error('Promise error:', e.reason);
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
+<script>
+const SEDES={"RED REBAGLIATI": ["H.N. IV EDGARDO REBAGLIATI MARTINS", "H.III SUAREZ-ANGAMOS", "H.II CANETE", "H.I ULDARICO ROCA FERNANDEZ", "H.I CARLOS ALCANTARA BUTTERFIELD", "H.II GUILLERMO KAELIN DE LA FUENTE", "POL. PABLO BERMUDEZ", "POL. CHINCHA", "POL. LOS PROCERES", "POL. JUAN JOSE RODRIGUEZ LAZO", "POL. VILLA MARIA", "POL. SANTA CRUZ", "CAP III SAN ISIDRO", "CAP III LOS PROCERES - SJM", "CAP III SURQUILLO", "CAP III LURIN", "CENTRO MEDICO MALA", "CENTRO URGENCIAS PLAYAS DEL SUR", "CEDHI - DIABETES E HIPERTENSION", "POSTA MEDICA SAN ISIDRO", "POSTA MEDICA LA QUEBRADA"], "RED ALMENARA": ["H.N. IV GUILLERMO ALMENARA IRIGOYEN", "H.III EMERGENCIAS GRAU", "H.II VITARTE", "H.II CLINICA GERIATRICA SAN ISIDRO LABRADOR", "H.II RAMON CASTILLA", "H.I AURELIO DIAZ UFANO Y PERAL", "H.I JORGE VOTO BERNALES CORPANCHO", "POL. CHOSICA", "POL. FRANCISCO PIZARRO", "POL. SAN LUIS", "ESSALUD EN SAN BORJA", "CAP III HUAYCAN", "CAP III EL AGUSTINO", "CAP III INDEPENDENCIA", "CAP III ALFREDO PIAZZA ROBERTS", "CENTRO MEDICO ANCIJE", "CENTRO MEDICO CASAPALCA", "POSTA MEDICA CONSTRUCCION CIVIL", "UBAP ZARATE", "UBAP GAMARRA"], "RED SABOGAL": ["H.N. III ALBERTO SABOGAL SOLOGUREN", "H.II LIMA NORTE LUIS NEGREIROS VEGA", "H.I MARINO MOLINA SCIPPA", "H.I OCTAVIO MONGRUT MUNOZ", "H.II ALBERTO BARTON THOMPSON", "POL. EL RETABLO - COMAS", "POL. BARTON THOMPSON", "POL. METROPOLITANO DEL CALLAO", "CAP III FIORI", "CAP III HNA. MARIA DONROSE SUTMOLLER", "CAP III PUENTE PIEDRA", "CAP III CARABAYLLO", "CAP III LUIS NEGREIROS VEGA", "CAP II CHANCAY", "CAP II PARAMONGA", "CAP II HUARAL", "CAP II BARRANCA", "CAP I RAURA", "CAP II SAYAN"], "ESPECIALIZADOS": ["INCOR - INST. NACIONAL CARDIOVASCULAR", "CENARES - CENTRO NACIONAL SALUD RENAL"]};
+const ESPECIALIDADES=[["CARDIOLOGIA", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]], ["CIRUGIA GENERAL", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]], ["DERMATOLOGIA", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]], ["GASTROENTEROLOGIA", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]], ["MEDICINA COMPLEMENTARIA", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]], ["MEDICINA FAMILIAR Y COMUNITARIA", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"], ["ATENCION MEDICA AMBULATORIA", "TELECONSULTA"]]], ["MEDICINA GENERAL", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]], ["MEDICINA INTERNA", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]], ["OBSTETRA", [["ATENCION PROCEDIMIENTOS", "TOMA DE PAPANICOLAOU / IVAA/PRUEBA MOLECULAR VPH"], ["ACTIV.COLECTIVAS INTRAMURO (INTERV.EDU.COMUNICAC)", "ESTIMULACION PRE NATAL"], ["ACTIV.COLECTIVAS INTRAMURO (INTERV.EDU.COMUNICAC)", "PSICOPROFILAXIS OBSTETRICA"], ["ATENCION NO MEDICA AMBULATORIA", "PRIMERA ATENCION PRENATAL"], ["ATENCION NO MEDICA AMBULATORIA", "ATENCION PRE NATAL"], ["ATENCION NO MEDICA AMBULATORIA", "ATENCION EN PLANIFICACION FAMILIAR"]]], ["ODONTOLOGIA", [["ATENCION MEDICA AMBULATORIA", "SESIONES ODONTOLOGICAS"]]], ["OFTALMOLOGIA", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]], ["ORTOPEDIA Y TRAUMATOLOGIA", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]], ["OTORRINOLARINGOLOGIA", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]], ["PEDIATRIA", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]], ["NEUROLOGIA", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]], ["ENDOCRINOLOGIA", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]], ["PSICOLOGIA", [["ATENCION NO MEDICA AMBULATORIA", "CONSULTA PSICOLOGICA"]]], ["REUMATOLOGIA", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]], ["NEUMOLOGIA", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]], ["UROLOGIA", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]], ["GINECOLOGIA", [["ATENCION MEDICA AMBULATORIA", "CONSULTA MEDICA"]]]];
+
+const ICONOS={"CARDIOLOGIA":"&#10084;","CIRUGIA GENERAL":"&#128299;","DERMATOLOGIA":"&#129332;","GASTROENTEROLOGIA":"&#129453;","MEDICINA COMPLEMENTARIA":"&#127807;","MEDICINA FAMILIAR Y COMUNITARIA":"&#128106;","MEDICINA GENERAL":"&#129657;","MEDICINA INTERNA":"&#128657;","OBSTETRA":"&#129326;","ODONTOLOGIA":"&#129463;","OFTALMOLOGIA":"&#128065;","ORTOPEDIA Y TRAUMATOLOGIA":"&#129461;","OTORRINOLARINGOLOGIA":"&#128066;","PEDIATRIA":"&#128118;","NEUROLOGIA":"&#129504;","ENDOCRINOLOGIA":"&#128200;","PSICOLOGIA":"&#129504;","REUMATOLOGIA":"&#129460;","NEUMOLOGIA":"&#129658;","UROLOGIA":"&#128291;","GINECOLOGIA":"&#128140;"};
+
+// Poblar selectores de sedes
+function poblar(id, def) {
+  var s = document.getElementById(id);
+  if (!s) return;
+  s.innerHTML = "";
+  Object.entries(SEDES).forEach(function(entry) {
+    var g = entry[0], items = entry[1];
+    var og = document.createElement("optgroup");
+    og.label = "--- " + g + " ---";
+    items.forEach(function(v) {
+      var o = document.createElement("option");
+      o.value = v; o.textContent = v;
+      if (def && v.includes(def)) o.selected = true;
+      og.appendChild(o);
+    });
+    s.appendChild(og);
+  });
+}
+poblar("c-cen", "SANTA CRUZ");
+poblar("r-cen", "SUAREZ");
+poblar("rue-centro", "CHORRILLOS");
+poblar("r-cen", "SUAREZ");
+
+// Especialidades
+var selectedEsp = {esp:"MEDICINA GENERAL", tipo:"ATENCION MEDICA AMBULATORIA", sub:"CONSULTA MEDICA"};
+
+function renderEsp() {
+  var d = document.getElementById("esp-list");
+  if (!d) return;
+  d.innerHTML = "";
+  ESPECIALIDADES.forEach(function(item) {
+    var esp = item[0], subs = item[1];
+    var ico = ICONOS[esp] || "&#129657;";
+    var isSelected = (esp === selectedEsp.esp);
+    var div = document.createElement("div");
+    div.className = "esp-group";
+    var subsHtml = subs.map(function(sub, i) {
+      var tipo = sub[0], subname = sub[1];
+      var sel = isSelected && selectedEsp.sub === subname && selectedEsp.tipo === tipo;
+      return '<label class="esp-sub' + (sel ? " selected" : "") + '" onclick="selEsp(this)"' +
+        ' data-esp="' + esp.replace(/"/g, "&quot;") + '"' +
+        ' data-tipo="' + tipo.replace(/"/g, "&quot;") + '"' +
+        ' data-sub="' + subname.replace(/"/g, "&quot;") + '">' +
+        '<input type="radio" name="esp"' + (sel ? " checked" : "") + '>' +
+        '<div class="sub-info"><div class="st">' + tipo + '</div><div class="ss">' + subname + '</div></div>' +
+        '</label>';
+    }).join("");
+    div.innerHTML = '<div class="esp-head' + (isSelected ? " open" : "") + '" onclick="this.classList.toggle(\'open\')">' +
+      '<span class="ico">' + ico + '</span><span class="enm">' + esp + '</span><span class="arr">&#9660;</span>' +
+      '</div><div class="esp-subs">' + subsHtml + '</div>';
+    d.appendChild(div);
+  });
+  var b = document.getElementById("esp-sel-badge");
+  if (b) {
+    b.style.display = "block";
+    var txt = document.getElementById("esp-sel-txt");
+    if (txt) txt.textContent = selectedEsp.esp + " - " + selectedEsp.sub;
+  }
+}
+
+function selEsp(lbl) {
+  selectedEsp = {
+    esp: lbl.getAttribute("data-esp"),
+    tipo: lbl.getAttribute("data-tipo"),
+    sub: lbl.getAttribute("data-sub")
+  };
+  document.querySelectorAll(".esp-sub").forEach(function(l) { l.classList.remove("selected"); });
+  lbl.classList.add("selected");
+  var b = document.getElementById("esp-sel-badge");
+  if (b) b.style.display = "block";
+  var txt = document.getElementById("esp-sel-txt");
+  if (txt) txt.textContent = selectedEsp.esp + " - " + selectedEsp.sub;
+  // Actualizar label de especialidad en campo medico
+  actualizarEspLabel();
+}
+renderEsp();
+
+// Medicamentos EsSalud
+var meds = [
+  {n:"DICLOFENACO SODICO 25 MG / ML X 3 ML", c:"1.00", u:"AM", i:"1 AMP IM STAT x 1 dias."},
+  {n:"CEFTRIAXONA 1G (CON DILUYENTE)", c:"10.00", u:"AM", i:"2 GR EV CAD 24 HORAS x 5 dias."},
+  {n:"CLORURO DE SODIO 0.9% X 100 ML", c:"5.00", u:"FR", i:"VIA x 5 dias."}
+];
+
+function renderMeds() {
+  var d = document.getElementById("meds-list");
+  if (!d) return;
+  d.innerHTML = "";
+  meds.forEach(function(m, i) {
+    var div = document.createElement("div");
+    div.className = "mi";
+    div.innerHTML =
+      '<button class="del" onclick="delMed(' + i + ')">&#10005;</button>' +
+      '<div class="mn">' + (m.n || "Medicamento " + (i+1)) + '</div>' +
+      '<div class="fld"><label>Nombre</label><input type="text" value="' + m.n + '" oninput="meds[' + i + '].n=this.value.toUpperCase();this.value=this.value.toUpperCase()"></div>' +
+      '<div class="r2">' +
+        '<div class="fld"><label>Cantidad</label><input type="text" value="' + m.c + '" oninput="meds[' + i + '].c=this.value"></div>' +
+        '<div class="fld"><label>UM/FF</label><input type="text" value="' + m.u + '" oninput="meds[' + i + '].u=this.value.toUpperCase();this.value=this.value.toUpperCase()"></div>' +
+      '</div>' +
+      '<div class="fld"><label>Indicacion</label><textarea oninput="meds[' + i + '].i=this.value">' + m.i + '</textarea></div>';
+    d.appendChild(div);
+  });
+}
+function addMed() { meds.push({n:"", c:"1.00", u:"AM", i:""}); renderMeds(); }
+function delMed(i) { meds.splice(i, 1); renderMeds(); }
+renderMeds();
+
+// Medicamentos RUE
+var rueMeds = [
+  {n:"AZITROMICINA", conc:"500 mg", forma:"TABLETA", cant:"3", dosis:"1", via:"ORAL", frec:"C/ 24Horas", dur:"3 Dias"},
+  {n:"PARACETAMOL", conc:"500 mg", forma:"TABLETA", cant:"3", dosis:"2", via:"ORAL", frec:"C/ 8Horas", dur:"3 Dias"}
+];
+
+function renderRueMeds() {
+  var d = document.getElementById("rue-meds-list");
+  if (!d) return;
+  d.innerHTML = "";
+  rueMeds.forEach(function(m, i) {
+    var div = document.createElement("div");
+    div.className = "mi";
+    div.innerHTML =
+      '<button class="del" onclick="delRueMed(' + i + ')">&#10005;</button>' +
+      '<div class="mn">' + (m.n || "Medicamento " + (i+1)) + '</div>' +
+      '<div class="fld"><label>Nombre DCI</label><input type="text" value="' + m.n + '" oninput="rueMeds[' + i + '].n=this.value.toUpperCase();this.value=this.value.toUpperCase()"></div>' +
+      '<div class="r2">' +
+        '<div class="fld"><label>Concentracion</label><input type="text" value="' + m.conc + '" oninput="rueMeds[' + i + '].conc=this.value"></div>' +
+        '<div class="fld"><label>Forma Farm.</label><input type="text" value="' + m.forma + '" oninput="rueMeds[' + i + '].forma=this.value.toUpperCase();this.value=this.value.toUpperCase()"></div>' +
+      '</div>' +
+      '<div class="r2">' +
+        '<div class="fld"><label>Dosis</label><input type="text" value="' + m.dosis + '" oninput="rueMeds[' + i + '].dosis=this.value"></div>' +
+        '<div class="fld"><label>Via</label><input type="text" value="' + m.via + '" oninput="rueMeds[' + i + '].via=this.value.toUpperCase();this.value=this.value.toUpperCase()"></div>' +
+      '</div>' +
+      '<div class="r2">' +
+        '<div class="fld"><label>Frecuencia</label><input type="text" value="' + m.frec + '" oninput="rueMeds[' + i + '].frec=this.value"></div>' +
+        '<div class="fld"><label>Duracion</label><input type="text" value="' + m.dur + '" oninput="rueMeds[' + i + '].dur=this.value"></div>' +
+      '</div>' +
+      '<div class="fld"><label>Cantidad</label><input type="text" value="' + m.cant + '" oninput="rueMeds[' + i + '].cant=this.value"></div>';
+    d.appendChild(div);
+  });
+}
+function addRueMed() { rueMeds.push({n:"", conc:"", forma:"TABLETA", cant:"1", dosis:"1", via:"ORAL", frec:"C/ 8Horas", dur:"3 Dias"}); renderRueMeds(); }
+function delRueMed(i) { rueMeds.splice(i, 1); renderRueMeds(); }
+renderRueMeds();
+
+// Navegacion
+function pg(id) {
+  document.querySelectorAll(".page").forEach(function(p) { p.classList.remove("on"); });
+  document.querySelectorAll(".ntab").forEach(function(t) { t.classList.remove("active"); });
+  var pageEl = document.getElementById("pg-" + id);
+  if (pageEl) pageEl.classList.add("on");
+  var tabMap = {cita:0, receta:1, rue:2, citt:3, descanso:4, pvc:0, pvr:1, pvrue:2, pvcitt:3, pvdescanso:4};
+  var tabIdx = tabMap[id];
+  if (tabIdx !== undefined) {
+    var tabs = document.querySelectorAll(".ntab");
+    if (tabs[tabIdx]) tabs[tabIdx].classList.add("active");
+  }
+  var pagesEl = document.querySelector(".pages");
+  if (pagesEl) pagesEl.scrollTop = 0;
+}
+
+// Helpers
+function fmtF(v) {
+  if (!v) return "";
+  var parts = v.split("-");
+  return parts[2] + "/" + parts[1] + "/" + parts[0];
+}
+function up(id, v) {
+  var e = document.getElementById(id);
+  if (e) e.textContent = v;
+}
+
+// Preview Cita
+function goPvc() {
+  var est = document.getElementById("c-est").value;
+  var fec = fmtF(document.getElementById("c-fec").value);
+  var hor = document.getElementById("c-hor").value;
+  var esp = selectedEsp.esp;
+  var med = document.getElementById("c-med").value.toUpperCase();
+  var pac = document.getElementById("c-pac").value.toUpperCase();
+  var cen = document.getElementById("c-cen").value;
+  var con = document.getElementById("c-con").value;
+  var mod = document.getElementById("c-mod").value;
+  up("pv-ban", esp + " - " + selectedEsp.sub);
+  up("pv-est-t", est); up("pv-fec-t", fec + " - " + hor); up("pv-cen-t", cen);
+  up("pv-est", est); up("pv-fec", fec); up("pv-hor", hor); up("pv-esp", esp);
+  up("pv-med", med); up("pv-pac", pac); up("pv-cen", cen); up("pv-con", con); up("pv-mod", mod);
+  pg("pvc");
+}
+
+// Preview Receta EsSalud
+function goPvr() {
+  var num = "RECETA N\u00b0 " + document.getElementById("r-num").value;
+  var med = document.getElementById("r-med").value.toUpperCase();
+  var cen = document.getElementById("r-cen").value;
+  up("rv-num-t", num); up("rv-num", num); up("rv-med", med); up("rv-cen", cen);
+  var it = document.getElementById("rv-info-t");
+  if (it) it.innerHTML = "<span>" + cen + "</span><span>" + med + "</span>";
+  var rm = document.getElementById("rv-meds");
+  if (rm) {
+    rm.innerHTML = "";
+    meds.forEach(function(m) {
+      rm.innerHTML += '<div class="med-preview-item"><div class="mpn">' + m.n + '</div><div class="mpd">Cantidad: ' + m.c + ' | UM/FF: ' + m.u + '<br>' + m.i + '</div></div>';
+    });
+  }
+  pg("pvr");
+}
+
+// Preview CITT
+function goPvCitt() {
+  up("cv-form", document.getElementById("t-form").value);
+  up("cv-eess", document.getElementById("t-eess").value.toUpperCase());
+  up("cv-citt", document.getElementById("t-citt").value.toUpperCase());
+  up("cv-acto", document.getElementById("t-acto").value);
+  up("cv-serv", document.getElementById("t-serv").value.toUpperCase());
+  up("cv-nom",  document.getElementById("t-nom").value.toUpperCase());
+  up("cv-dni",  document.getElementById("t-dni").value);
+  up("cv-auto", document.getElementById("t-auto").value);
+  up("cv-tipo", document.getElementById("t-tipo").value);
+  up("cv-cont", document.getElementById("t-cont").value);
+  var mc = document.getElementById("t-medcon"); if (mc) up("cv-medcon", mc.value);
+  var pp = document.getElementById("t-parto");  if (pp) up("cv-parto",  pp.value);
+  up("cv-fini", fmtF(document.getElementById("t-fini").value));
+  up("cv-ffin", fmtF(document.getElementById("t-ffin").value));
+  var dcon = document.getElementById("t-dcon").value;
+  var dnco = document.getElementById("t-dnco").value;
+  up("cv-dcon", dcon); up("cv-dnco", dnco);
+  up("cv-dias-total", parseInt(dcon||0) + parseInt(dnco||0));
+  up("cv-mcargo", document.getElementById("t-mcargo").value.toUpperCase());
+  up("cv-mcode",  document.getElementById("t-mcode").value);
+  up("cv-mnom",   document.getElementById("t-mnom").value.toUpperCase());
+  up("cv-ruc",    document.getElementById("t-ruc").value);
+  up("cv-usr",    document.getElementById("t-usr").value.toUpperCase());
+  up("cv-ufec",   fmtF(document.getElementById("t-ufec").value));
+  var hor = document.getElementById("t-uhor").value;
+  var parts = hor.split(":");
+  var hh = parseInt(parts[0]);
+  var mm = parts[1];
+  var h12 = hh % 12 || 12;
+  var ampm = hh < 12 ? "AM" : "PM";
+  up("cv-uhor", h12 + ":" + mm + ":23 " + ampm);
+  pg("pvcitt");
+}
+
+// Preview Receta RUE
+function mkCheck(opciones, seleccionado) {
+  return opciones.map(function(o) {
+    return '<div class="rue-check"><span class="box">' + (o === seleccionado ? "X" : "") + '</span> ' + o + '</div>';
+  }).join("");
+}
+
+function goPvRue() {
+  var num   = document.getElementById("rue-num").value;
+  var pac   = document.getElementById("rue-pac").value.toUpperCase();
+  var edad  = document.getElementById("rue-edad").value;
+  var centro = document.getElementById("rue-centro").value;
+  var dxcod = document.getElementById("rue-dx-cod").value;
+  var dxdesc= document.getElementById("rue-dx-desc").value;
+  var tipo  = document.getElementById("rue-tipo").value;
+  var esp   = document.getElementById("rue-esp").value;
+  var demanda = document.getElementById("rue-demanda").value;
+  var medico = document.getElementById("rue-medico").value.toUpperCase();
+  var cmp   = document.getElementById("rue-cmp").value;
+  var fecha = fmtF(document.getElementById("rue-fecha").value);
+  up("rv-rue-num",  num); up("rv-rue-num2", num);
+  up("rv-rue-pac",  pac); up("rv-rue-edad", edad);
+  up("rv-rue-centro", centro);
+  up("rv-rue-dx-cod", dxcod); up("rv-rue-dx-desc", dxdesc);
+  up("rv-rue-med",  medico); up("rv-rue-med2",  medico);
+  up("rv-rue-cmp",  cmp);    up("rv-rue-cmp2",  cmp);
+  up("rv-rue-fecha", fecha); up("rv-rue-valido", fecha);
+  var dc = document.getElementById("rv-rue-demanda-checks");
+  var tc = document.getElementById("rv-rue-tipo-checks");
+  var ec = document.getElementById("rv-rue-esp-checks");
+  if (dc) dc.innerHTML = mkCheck(["Demanda","SIS","Intervencion"], demanda);
+  if (tc) tc.innerHTML = mkCheck(["Consulta Externa","Emergencia","Hospitalizacion"], tipo);
+  if (ec) ec.innerHTML = mkCheck(["Medicina","Cirugia","Ginecologia","Pediatria","Odontologia","Otros"], esp);
+  var t1 = document.getElementById("rv-rue-meds-tabla");
+  var t2 = document.getElementById("rv-rue-meds-tabla2");
+  if (t1) t1.innerHTML = "";
+  if (t2) t2.innerHTML = "";
+  rueMeds.forEach(function(m) {
+    if (t1) t1.innerHTML += '<tr><td class="left">' + m.n + '</td><td>' + m.dosis + '</td><td>' + m.via + '</td><td>' + m.frec + '</td><td>' + m.dur + '</td><td></td></tr>';
+    if (t2) t2.innerHTML += '<tr><td class="left">' + m.n + '</td><td>' + m.conc + '</td><td>' + m.forma + '</td><td>' + m.cant + '</td></tr>';
+  });
+  pg("pvrue");
+}
+
+// Preview Descanso
+function goPvDescanso() {
+  up("dv-diris",  document.getElementById("desc-diris").value);
+  up("dv-pac",    document.getElementById("desc-pac").value.toUpperCase());
+  up("dv-edad",   document.getElementById("desc-edad").value);
+  up("dv-dni",    document.getElementById("desc-dni").value);
+  up("dv-seguro", document.getElementById("desc-seguro").value);
+  up("dv-fini",   fmtF(document.getElementById("desc-fini").value));
+  up("dv-ffin",   fmtF(document.getElementById("desc-ffin").value));
+  up("dv-cie",    document.getElementById("desc-cie").value);
+  up("dv-dx",     document.getElementById("desc-dx").value);
+  up("dv-obs",    document.getElementById("desc-obs").value);
+  up("dv-med",    document.getElementById("desc-med").value.toUpperCase());
+  up("dv-esp",    document.getElementById("desc-esp").value.toUpperCase());
+  up("dv-cmp",    document.getElementById("desc-cmp").value);
+  up("dv-cmp2",   document.getElementById("desc-cmp").value);
+  up("dv-dnimedico", document.getElementById("desc-dnimedico").value);
+  pg("pvdescanso");
+}
+
+// Resets
+function rstCita() {
+  document.getElementById("c-est").value = "PENDIENTE";
+  document.getElementById("c-fec").value = "2026-06-24";
+  document.getElementById("c-hor").value = "09:48";
+  document.getElementById("c-med").value = "CUEVA RIOS MARGARITA";
+  document.getElementById("c-pac").value = "FRANCO MORENO MAYRA";
+  poblar("c-cen", "SANTA CRUZ");
+  document.getElementById("c-con").value = "04";
+  document.getElementById("c-mod").value = "PRESENCIAL";
+  selectedEsp = {esp:"MEDICINA GENERAL", tipo:"ATENCION MEDICA AMBULATORIA", sub:"CONSULTA MEDICA"};
+  renderEsp();
+}
+function rstReceta() {
+  meds = [
+    {n:"DICLOFENACO SODICO 25 MG / ML X 3 ML", c:"1.00", u:"AM", i:"1 AMP IM STAT x 1 dias."},
+    {n:"CEFTRIAXONA 1G (CON DILUYENTE)", c:"10.00", u:"AM", i:"2 GR EV CAD 24 HORAS x 5 dias."},
+    {n:"CLORURO DE SODIO 0.9% X 100 ML", c:"5.00", u:"FR", i:"VIA x 5 dias."}
+  ];
+  renderMeds(); poblar("r-cen", "SUAREZ");
+}
+function rstCitt() {
+  var fields = {
+    "t-form":"8003 - 1","t-citt":"A-407-00025421-23","t-eess":"408 POLIC. NIVEL I MARINO MOLINA SCIPPA",
+    "t-acto":"10034250","t-serv":"AB1 MEDICINA GENERAL","t-nom":"NOELIA CRISTINA HUAPAYA ESPINOZA DE ALBARRAN",
+    "t-dni":"73077022","t-auto":"8705248SDCM003","t-fini":"2024-09-24","t-ffin":"2024-09-24",
+    "t-dcon":"1","t-dnco":"0","t-mcode":"63832","t-mcargo":"MEDICO",
+    "t-mnom":"CESAR ANTONIO REBAZA VARGAS","t-ruc":"20600593685",
+    "t-usr":"CRISTOPHER JOHEL PALOMINO NAJARRO","t-ufec":"2024-09-24","t-uhor":"08:47"
+  };
+  Object.entries(fields).forEach(function(e) { var el=document.getElementById(e[0]); if(el) el.value=e[1]; });
+}
+function rstRue() {
+  document.getElementById("rue-num").value = "RUE00056259-25";
+  document.getElementById("rue-pac").value = "CHRISTIAN ALONSO PURIZACA QUINTANA";
+  document.getElementById("rue-edad").value = "24";
+  document.getElementById("rue-fecha").value = "2025-11-28";
+  document.getElementById("rue-medico").value = "JUAN PEDRO VALDIVIA ACOSTA";
+  document.getElementById("rue-cmp").value = "040060";
+  rueMeds = [
+    {n:"AZITROMICINA", conc:"500 mg", forma:"TABLETA", cant:"3", dosis:"1", via:"ORAL", frec:"C/ 24Horas", dur:"3 Dias"},
+    {n:"PARACETAMOL", conc:"500 mg", forma:"TABLETA", cant:"3", dosis:"2", via:"ORAL", frec:"C/ 8Horas", dur:"3 Dias"}
+  ];
+  renderRueMeds();
+}
+function rstDescanso() {
+  document.getElementById("desc-pac").value = "CHRISTIAN ALONSO PURIZACA QUINTANA";
+  document.getElementById("desc-edad").value = "24 anos, 3 meses, 25 dias.";
+  document.getElementById("desc-dni").value = "70854698";
+  document.getElementById("desc-fini").value = "2025-11-28";
+  document.getElementById("desc-ffin").value = "2025-11-28";
+  document.getElementById("desc-cie").value = "J02.9";
+  document.getElementById("desc-dx").value = "Faringitis Aguda (diagnostico clinico y epidemiologico)";
+  document.getElementById("desc-med").value = "DR. JUAN PEDRO VALDIVIA ACOSTA";
+  document.getElementById("desc-esp").value = "MEDICINA GENERAL";
+  document.getElementById("desc-cmp").value = "040060";
+  document.getElementById("desc-dnimedico").value = "01200773";
+}
+
+// Descargar PNG
+function dlDoc(elId, fname) {
+  var el = document.getElementById(elId);
+  if (!el) return;
+  el.style.overflow = "visible";
+  html2canvas(el, {
+    scale: 3, backgroundColor: "#ffffff",
+    useCORS: true, allowTaint: true,
+    scrollX: 0, scrollY: 0,
+    windowWidth: el.scrollWidth, windowHeight: el.scrollHeight
+  }).then(function(canvas) {
+    el.style.overflow = "";
+    var dataUrl = canvas.toDataURL("image/png");
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      var w = window.open();
+      w.document.write('<html><body style="margin:0;background:#000"><img src="' + dataUrl + '" style="max-width:100%;display:block"><p style="color:#fff;text-align:center;padding:10px;font-family:sans-serif">Manten presionada la imagen y elige Guardar imagen</p></body></html>');
+    } else {
+      var a = document.createElement("a");
+      a.download = fname + ".png";
+      a.href = dataUrl;
+      a.click();
+    }
+  });
+}
+
+// Descargar PDF
+function dlPDF(elId, fname) {
+  var el = document.getElementById(elId);
+  if (!el) return;
+  el.style.overflow = "visible";
+  html2canvas(el, {
+    scale: 3, backgroundColor: "#ffffff",
+    useCORS: true, allowTaint: true,
+    scrollX: 0, scrollY: 0,
+    windowWidth: el.scrollWidth, windowHeight: el.scrollHeight
+  }).then(function(canvas) {
+    el.style.overflow = "";
+    var jspdf = window.jspdf;
+    if (!jspdf) return alert("jsPDF no cargado");
+    var doc = new jspdf.jsPDF({orientation:"portrait", unit:"mm", format:"a4"});
+    var pdfW = 210, pdfH = 297;
+    var ratio = canvas.width / canvas.height;
+    var w = 180, h = w / ratio;
+    if (h > 280) { h = 280; w = h * ratio; }
+    var x = (pdfW - w) / 2, y = 10;
+    doc.setFillColor(255, 255, 255);
+    doc.rect(0, 0, pdfW, pdfH, "F");
+    doc.addImage(canvas.toDataURL("image/png"), "PNG", x, y, w, h);
+    doc.setFillColor(0, 153, 216);
+    doc.rect(0, pdfH - 10, pdfW, 10, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "normal");
+    var now = new Date();
+    doc.text("EsSalud - " + now.toLocaleDateString("es-PE") + " " + now.toLocaleTimeString("es-PE"), pdfW/2, pdfH-4, {align:"center"});
+    doc.save(fname);
+  });
+}
+
+// IA: Sugerir medicos segun especialidad
+async function sugerirMedico() {
+  var esp = selectedEsp.esp;
+  var cen = document.getElementById("c-cen") ? document.getElementById("c-cen").value : "";
+  var btn = document.getElementById("btn-med-ia");
+  var loading = document.getElementById("med-loading");
+  var lista = document.getElementById("med-sugeridos");
+  var errDiv = document.getElementById("med-error");
+
+  if (btn) { btn.style.opacity = "0.5"; btn.style.pointerEvents = "none"; }
+  if (loading) { loading.style.display = "flex"; }
+  if (lista) lista.style.display = "none";
+  if (errDiv) errDiv.style.display = "none";
+
+  var loadEsp = document.getElementById("med-loading-esp");
+  if (loadEsp) loadEsp.textContent = esp;
+
+  try {
+    var res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 400,
+        messages: [{
+          role: "user",
+          content: "Genera exactamente 6 nombres de medicos peruanos reales o verosimiles para la especialidad de " + esp + " en EsSalud Peru. Deben parecer nombres peruanos autenticos con dos apellidos y nombre. Formato en mayusculas: APELLIDO1 APELLIDO2 NOMBRE. Responde SOLO con un array JSON valido, sin texto adicional: ["NOMBRE1","NOMBRE2","NOMBRE3","NOMBRE4","NOMBRE5","NOMBRE6"]"
+        }]
+      })
+    });
+    if (!res.ok) throw new Error("Error " + res.status);
+    var data = await res.json();
+    var txt = data.content[0].text.trim().replace(/```json|```/g, "").trim();
+    var nombres = JSON.parse(txt);
+
+    if (lista) {
+      // Header de la lista
+      var header = '<div style="background:var(--az);color:#fff;padding:8px 14px;font-size:11px;font-weight:700;letter-spacing:.04em">' +
+        '&#128100; MEDICOS DE ' + esp + '</div>';
+
+      var items = nombres.map(function(n, i) {
+        var safe = n.replace(/\/g, "\\").replace(/'/g, "\'");
+        return '<div onclick="selMedico('' + safe + '')" style="' +
+          'padding:11px 14px;border-bottom:1px solid var(--azm);cursor:pointer;' +
+          'display:flex;align-items:center;gap:10px;background:#fff;transition:background .15s"' +
+          ' onmousedown="this.style.background='var(--azc)'" onmouseup="this.style.background='#fff'">' +
+          '<div style="width:32px;height:32px;background:var(--azc);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">&#128100;</div>' +
+          '<div>' +
+            '<div style="font-size:13px;font-weight:700;color:var(--tx)">' + n + '</div>' +
+            '<div style="font-size:11px;color:var(--su)">' + esp + '</div>' +
+          '</div>' +
+          '</div>';
+      }).join("");
+
+      var footer = '<div style="padding:8px 14px;text-align:center;font-size:11px;color:var(--su);background:var(--azc)">' +
+        'Toca un nombre para seleccionarlo</div>';
+
+      lista.innerHTML = header + items + footer;
+      lista.style.display = "block";
+    }
+  } catch(e) {
+    if (errDiv) {
+      errDiv.textContent = "No se pudo obtener sugerencias: " + e.message;
+      errDiv.style.display = "block";
+    }
+  } finally {
+    if (loading) loading.style.display = "none";
+    if (btn) { btn.style.opacity = "1"; btn.style.pointerEvents = "auto"; }
+  }
+}
+
+function selMedico(nombre) {
+  var el = document.getElementById("c-med");
+  if (el) {
+    el.value = nombre;
+    // Efecto visual de seleccion
+    el.style.borderColor = "var(--az)";
+    el.style.background = "var(--azc)";
+    setTimeout(function() {
+      el.style.borderColor = "";
+      el.style.background = "";
+    }, 1000);
+  }
+  var lista = document.getElementById("med-sugeridos");
+  if (lista) lista.style.display = "none";
+}
+
+// Actualizar el label de especialidad cuando cambia
+function actualizarEspLabel() {
+  var label = document.getElementById("med-esp-label");
+  if (label) label.textContent = selectedEsp.esp;
+  // Cerrar lista si estaba abierta
+  var lista = document.getElementById("med-sugeridos");
+  if (lista) lista.style.display = "none";
+}
+
+// IA: Sugerir medicamentos
+async function sugerirIA() {
+  var esp = document.getElementById("ia-esp").value;
+  var loading = document.getElementById("ia-loading");
+  var errDiv = document.getElementById("ia-error");
+  var btn = document.querySelector(".biai");
+  if (loading) loading.style.display = "block";
+  if (errDiv) errDiv.style.display = "none";
+  if (btn) btn.style.pointerEvents = "none";
+  try {
+    var res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6", max_tokens: 1000,
+        messages: [{role:"user", content: "Eres medico peruano de EsSalud. Para consulta de " + esp + ", genera 3 medicamentos tipicos del petitorio EsSalud Peru. Responde SOLO JSON sin texto extra: [{\"nombre\":\"NOMBRE EN MAYUSCULAS\",\"cantidad\":\"1.00\",\"umff\":\"TAB\",\"indicacion\":\"1 TAB VO CADA 8 HORAS x 7 dias.\"}]"}]
+      })
+    });
+    if (!res.ok) throw new Error("Error " + res.status);
+    var data = await res.json();
+    var txt = data.content[0].text.trim().replace(/```json|```/g, "").trim();
+    var sugeridos = JSON.parse(txt);
+    sugeridos.forEach(function(m) {
+      meds.push({n: m.nombre||"", c: m.cantidad||"1.00", u: m.umff||"TAB", i: m.indicacion||""});
+    });
+    renderMeds();
+    pg("receta");
+    setTimeout(function() {
+      var ml = document.getElementById("meds-list");
+      if (ml) ml.scrollIntoView({behavior:"smooth"});
+    }, 100);
+  } catch(e) {
+    if (errDiv) { errDiv.textContent = "Error: " + e.message; errDiv.style.display = "block"; }
+  } finally {
+    if (loading) loading.style.display = "none";
+    if (btn) btn.style.pointerEvents = "auto";
+  }
+}
+
+// IA: Generar observaciones descanso
+async function generarObs() {
+  var dx = document.getElementById("desc-dx").value;
+  var cie = document.getElementById("desc-cie").value;
+  var btn = document.getElementById("btn-genobs");
+  var loading = document.getElementById("obs-loading");
+  if (btn) { btn.style.opacity = "0.5"; btn.style.pointerEvents = "none"; }
+  if (loading) loading.style.display = "block";
+  try {
+    var res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6", max_tokens: 400,
+        messages: [{role:"user", content: "Escribe una observacion medica profesional para una constancia de descanso medico peruano para el diagnostico: " + dx + " (CIE-10: " + cie + "). Maximo 4 lineas, en MAYUSCULAS, estilo medico formal MINSA Peru. Solo el texto, sin introduccion."}]
+      })
+    });
+    if (!res.ok) throw new Error("Error " + res.status);
+    var data = await res.json();
+    var obs = document.getElementById("desc-obs");
+    if (obs) obs.value = data.content[0].text.trim().toUpperCase();
+  } catch(e) { alert("Error IA: " + e.message); }
+  finally {
+    if (loading) loading.style.display = "none";
+    if (btn) { btn.style.opacity = "1"; btn.style.pointerEvents = "auto"; }
+  }
+}
+
+// Instalacion PWA
+var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+var isAndroid = /Android/.test(navigator.userAgent);
+var isInStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+var deferredPrompt = null;
+
+window.addEventListener("beforeinstallprompt", function(e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  if (!isInStandalone) {
+    var btn = document.getElementById("btn-install");
+    var banner = document.getElementById("install-banner");
+    if (btn) btn.style.display = "flex";
+    if (banner) banner.style.display = "flex";
+  }
+});
+
+window.addEventListener("load", function() {
+  if (!isInStandalone && isIOS) {
+    var btn = document.getElementById("btn-install");
+    var banner = document.getElementById("install-banner");
+    if (btn) btn.style.display = "flex";
+    if (banner) banner.style.display = "flex";
+  }
+});
+
+function mostrarInstall() {
+  var modal = document.getElementById("install-modal");
+  var titulo = document.getElementById("im-titulo");
+  var desc = document.getElementById("im-desc");
+  var steps = document.getElementById("im-steps");
+  var btnOk = document.getElementById("im-btn-ok");
+  if (!modal) return;
+  if (isAndroid && deferredPrompt) {
+    if (titulo) titulo.textContent = "Instalar en Android";
+    if (desc) desc.textContent = "Agrega EsSalud a tu pantalla de inicio";
+    if (steps) steps.innerHTML = '<div class="install-step"><div class="snum">1</div><div class="stxt">Toca <b>Instalar</b> abajo y confirma</div></div>';
+    if (btnOk) { btnOk.textContent = "Instalar ahora"; btnOk.style.display = "block"; }
+  } else if (isIOS) {
+    if (titulo) titulo.textContent = "Instalar en iPhone";
+    if (desc) desc.textContent = "Abre en Safari y sigue los pasos";
+    if (steps) steps.innerHTML =
+      '<div class="install-step"><div class="snum">1</div><div class="stxt">Abre en <b>Safari</b></div></div>' +
+      '<div class="install-step"><div class="snum">2</div><div class="stxt">Toca el boton <b>Compartir</b> &#11014;</div></div>' +
+      '<div class="install-step"><div class="snum">3</div><div class="stxt">Toca <b>"Anadir a pantalla de inicio"</b></div></div>' +
+      '<div class="install-step"><div class="snum">4</div><div class="stxt">Toca <b>Agregar</b> &#10003;</div></div>';
+    if (btnOk) { btnOk.textContent = "Entendido"; btnOk.style.display = "block"; }
+  } else {
+    if (titulo) titulo.textContent = "Instalar app";
+    if (steps) steps.innerHTML = '<div class="install-step"><div class="snum">1</div><div class="stxt">Toca el icono en la barra del navegador</div></div>';
+    if (btnOk) btnOk.style.display = deferredPrompt ? "block" : "none";
+  }
+  modal.classList.remove("hide");
+  document.body.style.overflow = "hidden";
+}
+
+function cerrarInstall() {
+  var modal = document.getElementById("install-modal");
+  if (modal) modal.classList.add("hide");
+  document.body.style.overflow = "";
+}
+
+async function accionInstall() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    var result = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    if (result.outcome === "accepted") {
+      var btn = document.getElementById("btn-install");
+      var banner = document.getElementById("install-banner");
+      if (btn) btn.style.display = "none";
+      if (banner) banner.style.display = "none";
+    }
+  }
+  cerrarInstall();
+}
+
+var installModal = document.getElementById("install-modal");
+if (installModal) {
+  installModal.addEventListener("click", function(e) {
+    if (e.target === this) cerrarInstall();
+  });
+}
+</script>
+
+<!-- MODAL INSTALACION -->
+<div class="install-modal hide" id="install-modal">
+  <div class="install-box">
+    <div class="ib-logo">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAABfklEQVR42u3VsQ3AIAwAQYzYJZtlJ5gsTJNUaSkQBUh3A7iwXnak+iSYla0AASEgBISAQEAICAEhIBAQAkJACAgEhIAQEAICASEgBISAEBAICAEhIAQEAkJACAgBgYAQEAJCQCAgBISAEBACAgEhIASEgEBACAgBISAYKWvHvfdlp5uL1l0gvDAEBAJCQAgIASEgEBACQkAICASEgBAQAgIBISAEhIBAQAgIASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISAQEAICAEhIBAQAkJACAgEhIAQEAICASEgBISAQEAICAEhIAQEAkJACAgBgYAQEAJCQCAgBISAEBAICAEhIASEgEBACAgBISAQEAJCQAgIBISAEBACAgEhIATE+cracdG6nbpAICAEhIAQEAgIASEgBAQCQkAICAEhIBAQAkJACAgEhIAQEAICASEgBISAQEAICAEhIBAQAkJACAgBgYAQEAJCQCAgBISAEBAICAEhIAQEvw/7fgdpEeVuwgAAAABJRU5ErkJggg==" alt="EsSalud">
+    </div>
+    <h2 id="im-titulo">Instalar EsSalud</h2>
+    <p id="im-desc">Agrega la app a tu pantalla de inicio</p>
+    <div id="im-steps"></div>
+    <button class="ib-btn-ok" id="im-btn-ok" onclick="accionInstall()">Instalar</button>
+    <button class="ib-btn-cerrar" onclick="cerrarInstall()">Ahora no</button>
+  </div>
+</div>
+
+</body>
+</html>
